@@ -34,6 +34,8 @@ namespace MONITOR_APP.VIEW
             this.DataContext = vm;
         }
 
+        #region Event
+
         private void Button_EXIT(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
@@ -46,9 +48,9 @@ namespace MONITOR_APP.VIEW
 
         private void Button_DBConn(object sender, RoutedEventArgs e)
         {
-            var conn = head.newConnect("52.79.127.111", "3306", "hansung_db", "hansung", "aidb4231@");
-            
-            if (conn == null) MessageBox.Show("Error in connect");
+            head.newConnect("52.79.127.111", "3306", "hansung_db", "hansung", "aidb4231@");
         }
+
+        #endregion
     }
 }

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MONITOR_APP.VIEW"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d" Height="740" Width="1100"
-        Background="White" ResizeMode="NoResize" Topmost="True" WindowStartupLocation="CenterScreen" WindowStyle="None">
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
     <Grid>
 
         <Grid.ColumnDefinitions>

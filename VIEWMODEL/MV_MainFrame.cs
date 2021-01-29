@@ -9,10 +9,5 @@ namespace MONITOR_APP.VIEWMODEL
 {
     public class MV_MainFrame
     {
-        public int num { get; set; }
-        public MV_MainFrame()
-        {
-            num = 3;
-        }
     }
 }

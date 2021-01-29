@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +11,6 @@ namespace MONITOR_APP.UTILITY
 {
     static public class MySQL
     {
-        static MySqlConnection connection = null;
-        static bool DataSaveResult;
-        static bool DataSearchResult;
-
-
         static public void Connect()
         {
             try
@@ -23,7 +19,7 @@ namespace MONITOR_APP.UTILITY
                     $"DATABASE=profile;" +
                     $"UID=root;" +
                     $"PASSWORD=1234;";
-                connection = new MySqlConnection(connectionPath);
+                MySqlConnection connection = new MySqlConnection(connectionPath);
                 connection.Open();
                 connection.Close();
             }
@@ -41,9 +37,9 @@ namespace MONITOR_APP.UTILITY
                     $"DATABASE={db_name};" +
                     $"UID={id};" +
                     $"PASSWORD={pass};";
-                connection = new MySqlConnection(connectionPath);
-                DBOpen();
-                DBClose();
+                MySqlConnection connection = new MySqlConnection(connectionPath);
+                DBOpen(connection);
+                DBClose(connection);
 
                 return connection;
             }
@@ -54,11 +50,11 @@ namespace MONITOR_APP.UTILITY
         }
 
         // DataBase Connection
-        static private bool DBOpen()
+        static private bool DBOpen(MySqlConnection conn)
         {
             try
             {
-                connection.Open();
+                conn.Open();
                 return true;
             }
             catch (MySqlException e)
@@ -77,11 +73,11 @@ namespace MONITOR_APP.UTILITY
         }
 
         // DataBase Close
-        static private bool DBClose()
+        static private bool DBClose(MySqlConnection conn)
         {
             try
             {
-                connection.Close();
+                conn.Close();
                 return true;
             }
             catch (MySqlException e)
@@ -92,66 +88,50 @@ namespace MONITOR_APP.UTILITY
         }
 
         // Queyr Executer(Insert, Delete, Update ...)
-        static public void MySqlQueryExecuter(string userQuery)
+        static public void MySqlQueryExecuter(MySqlConnection conn,string userQuery)
         {
-            if (DBOpen() == true)
+            if (DBOpen(null) == true)
             {
-                MySqlCommand command = new MySqlCommand(userQuery, connection);
+                MySqlCommand command = new MySqlCommand(userQuery, conn);
 
                 if (command.ExecuteNonQuery() == 1)
                 {
                     //Debug.WriteLine("값 저장 성공");
-                    DataSaveResult = true;
                 }
                 else
                 {
                     //Debug.WriteLine("값 저장 실패");
-                    DataSaveResult = false;
                 }
 
-                DBClose();
+                DBClose(null);
             }
         }
 
-        static public void ggg(MySqlConnection conn, string table)
+        static public DataTable SelectTable(MySqlConnection conn, string table, string danji)
         {
-            string query = $"SELECT * FROM {table};";
+            string query = $"SELECT * FROM {table} WHERE DANJI_ID = {danji};";
 
-            if (DBOpen() == true)
+            if (DBOpen(conn) == true)
             {
-                MySqlCommand command = new MySqlCommand(query, conn);
-                MySqlDataReader dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
+                try
                 {
-                    element[0].Add(dataReader["id"].ToString());
-                    element[1].Add(dataReader["pw"].ToString());
-                }
+                    MySqlCommand command = new MySqlCommand(query, conn);
 
-                // 추가된 코드
-                if (element != null)
+                    DataTable dt = new DataTable();
+                    MySqlDataAdapter da = new MySqlDataAdapter(command);
+                    da.Fill(dt);
+
+                    DBClose(conn);
+                    return dt;
+                }
+                catch (Exception e)
                 {
-                    for (int i = 0; i < element[0].Count; i++)
-                    {
-                        if (element[0][i].Contains(id))
-                        {
-                            for (int j = 0; j < element[1].Count; i++)
-                            {
-                                if (element[1][i].Contains(pw))
-                                {
-                                    DataSearchResult = true;
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                    }
+                    MessageBox.Show($"Select Error!\n{e.Message}");
+
+                    DBClose(conn);
+                    return null;
                 }
-
-                dataReader.Close();
-                DBClose();
-
-                return element;
+                
             }
             else
             {
@@ -159,57 +139,5 @@ namespace MONITOR_APP.UTILITY
             }
         }
 
-        static public List<string>[] Select(string tableName, int columnCnt, string id, string pw)
-        {
-            string query = "SELECT * FROM" + " " + tableName;
-
-            List<string>[] element = new List<string>[columnCnt];
-
-            for (int index = 0; index < element.Length; index++)
-            {
-                element[index] = new List<string>();
-            }
-
-            if (DBOpen() == true)
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
-                MySqlDataReader dataReader = command.ExecuteReader();
-
-                while (dataReader.Read())
-                {
-                    element[0].Add(dataReader["id"].ToString());
-                    element[1].Add(dataReader["pw"].ToString());
-                }
-
-                // 추가된 코드
-                if (element != null)
-                {
-                    for (int i = 0; i < element[0].Count; i++)
-                    {
-                        if (element[0][i].Contains(id))
-                        {
-                            for (int j = 0; j < element[1].Count; i++)
-                            {
-                                if (element[1][i].Contains(pw))
-                                {
-                                    DataSearchResult = true;
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                    }
-                }
-
-                dataReader.Close();
-                DBClose();
-
-                return element;
-            }
-            else
-            {
-                return null;
-            }
-        }
     }
 }

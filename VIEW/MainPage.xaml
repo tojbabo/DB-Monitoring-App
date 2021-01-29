@@ -30,15 +30,15 @@
             </Grid.RowDefinitions>
 
             <Button Grid.Row="0" Content="ADD" Click="Button_ADD" Height="Auto" Background="#FF053E95" />
-            <Button Grid.Row="1" Content="Button 2" Height="Auto"  Background="#FF164FA6" />
+            <Button Grid.Row="1" Content="Button 2"  Height="Auto"  Background="#FF164FA6" />
             <Button Grid.Row="2" Content="Button 3" Height="Auto" Background="#FF3872C8"/>
             <Button Grid.Row="3" Content="CLEAR" Click="Button_CLEAR" Height="Auto" Background="#FF5A94EA"/>
 
         </Grid>
-
+        
         <Grid Grid.Column="1">
             <ListBox Grid.Column="1" Name="listBox" ItemsSource="{Binding Datas}"
-                  HorizontalContentAlignment="Stretch"
+                 HorizontalContentAlignment="Stretch"
                  ScrollViewer.CanContentScroll="False"
                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
                  PreviewMouseLeftButtonDown="ListBox_LeftClick"
@@ -46,7 +46,9 @@
                  Drop="ListBox_Drop"
                  AllowDrop="True">
 
-                <!--
+                
+
+                <!-- 리스트박스 선택 안되게 하는 코드
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="Focusable" Value="False"/>
@@ -58,8 +60,18 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <live:CartesianChart  Height="250"  
-                                          Series="{Binding yData}"
                                           LegendLocation="Top">
+
+                            <live:CartesianChart.Series>
+                                <live:ColumnSeries Title="dfasdf" Values="{Binding cs}"/>
+                            </live:CartesianChart.Series>
+
+                            <live:CartesianChart.DataTooltip>
+                                <local:CustomTooltip></local:CustomTooltip>
+                            </live:CartesianChart.DataTooltip>
+
+
+
                             <live:CartesianChart.AxisX>
                                 <live:Axis Title="Time" LabelsRotation="20"  Labels="{Binding Labels}" Position="LeftBottom">
                                     <live:Axis.Separator >
@@ -78,5 +90,50 @@
 
             </ListBox>
         </Grid>
+
+        
+        <live:CartesianChart 
+            Grid.Column="1"
+            Name="c"
+            BorderBrush="Red" BorderThickness="2"
+            LegendLocation="Top"
+            Margin="15">
+
+
+            <live:CartesianChart.DataTooltip>
+                <local:CustomTooltip></local:CustomTooltip>
+            </live:CartesianChart.DataTooltip>
+            
+            
+            
+
+            <live:CartesianChart.Resources>
+                <Style TargetType="live:DefaultTooltip">
+                    <Setter Property="Background" Value="DarkOliveGreen"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="Height" Value="50"/>
+                    <Setter Property="Width" Value="10"/>
+                </Style>
+            </live:CartesianChart.Resources>
+            
+            <live:CartesianChart.ChartLegend>
+                <live:DefaultLegend BulletSize="15" Background="Black"/>
+            </live:CartesianChart.ChartLegend>
+
+
+            <live:CartesianChart.AxisY>
+                <live:Axis MinValue="0" MaxValue="1000"/>
+            </live:CartesianChart.AxisY>
+            <live:CartesianChart.AxisX>
+                <live:Axis Labels="01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12"/>
+            </live:CartesianChart.AxisX>
+            <live:CartesianChart.Series>
+                <live:LineSeries Stroke="Green" Title="Sample1" Values="700, 200, 300, 400, 500, 600, 700, 800, 900, 90, 211, 220"/>
+                <live:LineSeries Stroke="Red" Title="Sample2" Values=" 70, 20, 100, 140, 50, 60, 70, 80, 90, 100, 111, 120"/>
+            </live:CartesianChart.Series>
+        </live:CartesianChart>
+
+
+
     </Grid>
 </Page>

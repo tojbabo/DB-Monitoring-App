@@ -10,12 +10,13 @@ namespace MONITOR_APP.VIEWMODEL
 {
     public sealed class BASE
     {
-        private static BASE staticBASE;
+        private static BASE staticBASE = null;
         public static BASE getBASE()
         {
-            if(staticBASE == null)
+            if (staticBASE == null)
             {
                 staticBASE = new BASE();
+                staticBASE.Initalize();
             }
             return staticBASE;
         }
@@ -45,9 +46,12 @@ namespace MONITOR_APP.VIEWMODEL
 
         private BASE()
         {
+            conn = null;
+        }
+        private void Initalize()
+        {
             mv_mainframe = new MV_MainFrame();
             mv_mainpage = new MV_MainPage();
-            conn = null;
         }
 
         

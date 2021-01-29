@@ -37,9 +37,17 @@ namespace MONITOR_APP.VIEW
         {
             InitializeComponent();
             head = BASE.getBASE();
+
             vm = head.getMV_MainPage();
-            this.DataContext = vm;
+            this.DataContext = vm;            
+
+            
+
+
+
         }
+
+        #region Event
 
         private void Button_ADD(object sender, RoutedEventArgs e)
         {
@@ -50,6 +58,8 @@ namespace MONITOR_APP.VIEW
         {
             vm.ChartReset();
         }
+
+        #endregion
 
         #region  drag & drop
 
@@ -137,5 +147,6 @@ namespace MONITOR_APP.VIEW
 
         #endregion
 
+        
     }
 }
