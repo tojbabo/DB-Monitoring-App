@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29920.165
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MONITOR_APP", "MONITOR_APP.csproj", "{4EDB4593-9447-4ECD-8093-2C4070E1DFFE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4EDB4593-9447-4ECD-8093-2C4070E1DFFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EDB4593-9447-4ECD-8093-2C4070E1DFFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EDB4593-9447-4ECD-8093-2C4070E1DFFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EDB4593-9447-4ECD-8093-2C4070E1DFFE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F7D03CC0-242E-4A9D-89B3-79EBBBDF4F94}
+	EndGlobalSection
+EndGlobal

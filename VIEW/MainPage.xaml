@@ -1,0 +1,82 @@
+﻿<Page x:Class="MONITOR_APP.VIEW.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MONITOR_APP.VIEW"
+      xmlns:live="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="MainPage">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="9*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Background="#FF053E95" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Button Grid.Row="0" Content="ADD" Click="Button_ADD" Height="Auto" Background="#FF053E95" />
+            <Button Grid.Row="1" Content="Button 2" Height="Auto"  Background="#FF164FA6" />
+            <Button Grid.Row="2" Content="Button 3" Height="Auto" Background="#FF3872C8"/>
+            <Button Grid.Row="3" Content="CLEAR" Click="Button_CLEAR" Height="Auto" Background="#FF5A94EA"/>
+
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <ListBox Grid.Column="1" Name="listBox" ItemsSource="{Binding Datas}"
+                  HorizontalContentAlignment="Stretch"
+                 ScrollViewer.CanContentScroll="False"
+                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                 PreviewMouseLeftButtonDown="ListBox_LeftClick"
+                 PreviewMouseMove="ListBox_Drag"
+                 Drop="ListBox_Drop"
+                 AllowDrop="True">
+
+                <!--
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Focusable" Value="False"/>
+                    <Setter Property="IsHitTestVisible" Value="False" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            -->
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <live:CartesianChart  Height="250"  
+                                          Series="{Binding yData}"
+                                          LegendLocation="Top">
+                            <live:CartesianChart.AxisX>
+                                <live:Axis Title="Time" LabelsRotation="20"  Labels="{Binding Labels}" Position="LeftBottom">
+                                    <live:Axis.Separator >
+                                        <live:Separator Step="1" />
+                                    </live:Axis.Separator>
+                                </live:Axis>
+                            </live:CartesianChart.AxisX>
+                            <live:CartesianChart.AxisY>
+                                <live:Axis Title="Measure" Position="LeftBottom"></live:Axis>
+                            </live:CartesianChart.AxisY>
+
+                        </live:CartesianChart>
+                    </DataTemplate>
+
+                </ListBox.ItemTemplate>
+
+            </ListBox>
+        </Grid>
+    </Grid>
+</Page>
