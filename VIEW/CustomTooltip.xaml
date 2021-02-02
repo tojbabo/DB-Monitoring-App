@@ -6,6 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MONITOR_APP.VIEW"
              xmlns:util="clr-namespace:MONITOR_APP.UTILITY"
+             xmlns:model="clr-namespace:MONITOR_APP.MODEL"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance local:CustomTooltip}">
@@ -22,6 +23,7 @@
                     </Grid.ColumnDefinitions>
                     <Rectangle Grid.Column="0" Stroke="{Binding Series.Stroke}" Fill="{Binding Series.Fill}"
                                Height="15" Width="15"></Rectangle>
+                    <!--<TextBlock Grid.Column="1" Text="{Binding ChartPoint.Instance.(model:ChartData.)}" -->
                     <TextBlock Grid.Column="1" Text="{Binding ChartPoint.Instance.(util:CustomVm.Name)}" 
                                Margin="5 0 0 0" VerticalAlignment="Center" Foreground="White"/>
                     <TextBlock Grid.Column="2" Text="{Binding ChartPoint.Instance.(util:CustomVm.LastName)}" 

@@ -97,6 +97,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MODEL\DBData.cs" />
+    <Compile Include="MODEL\ChartData2.cs" />
     <Compile Include="MODEL\ChartData.cs" />
     <Compile Include="UTILITY\CustomVm.cs" />
     <Compile Include="UTILITY\MySQL.cs" />

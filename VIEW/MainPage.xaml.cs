@@ -109,7 +109,7 @@ namespace MONITOR_APP.VIEW
                                 ((DependencyObject)(listBox.InputHitTest(e.GetPosition(listBox))));
 
                 
-                object item = temp.DataContext;
+                object item = temp?.DataContext;
 
                 if (temp == null)
                     index = listBox.Items.Count - 1;
@@ -117,12 +117,12 @@ namespace MONITOR_APP.VIEW
                     index = listBox.Items.IndexOf(item);
 
 
-                var something = vm.Datas[indexDrag];
+                var something = vm.Vms[indexDrag];
 
-                vm.Datas.Remove(something);
+                vm.Vms.Remove(something);
                 if (index < indexDrag) indexDrag--;
 
-                vm.Datas.Insert(index, something);
+                vm.Vms.Insert(index, something);
 
 
                 indexDrag = -1;

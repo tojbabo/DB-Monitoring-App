@@ -13,6 +13,5 @@ namespace MONITOR_APP.UTILITY
         public int Phone { get; set; }
 
         public int PurchasedItems { get; set; }
-
     }
 }
