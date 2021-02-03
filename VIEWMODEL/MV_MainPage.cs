@@ -31,11 +31,11 @@ namespace MONITOR_APP.VIEWMODEL
             Vms = new ObservableCollection<ChartData>();
         }
 
-        DataTable GetDataTable(string table,string opt)
+        DataTable GetDataTable(string[] opts)
         {
             var conn = head.getConnect();
 
-            DataTable dt = MySQL.SelectTable(conn, table, opt);
+            DataTable dt = MySQL.SelectTable(conn,MySQL.MakeQuery(opts));
 
             if (dt == null) MessageBox.Show("data table is null");
 
@@ -46,7 +46,7 @@ namespace MONITOR_APP.VIEWMODEL
 
         SelectOptWindow SOW;
 
-        public void CreateChart()
+        public void RequestSelect()
         {
             SOW = new SelectOptWindow();
 
@@ -60,6 +60,10 @@ namespace MONITOR_APP.VIEWMODEL
         {
             string[] options = Parameters.Split('\\');
 
+            string d = "asd\\asdfasd\\vdfdfdf\\\\\\\\asdfasdf";
+            string[] df = d.Split('\\');
+            Console.WriteLine($"data is : {df.Count()}");
+
             if (SOW != null)
             {
                 SOW.Close();
@@ -67,27 +71,25 @@ namespace MONITOR_APP.VIEWMODEL
                 SOW = null;
             }
 
-            CreateGraph(options);
+            CreateChart(options);
         }
 
-        void CreateGraph(string[] options)
+        void CreateChart(string[] options)
         {
             string table = options[0];
             string danji = options[1];
 
-            DataTable dt = GetDataTable(table,danji);
+            DataTable dt = GetDataTable(options);
 
             ChartData chart = new ChartData();
 
-            foreach(DataRow r in dt.Rows)
+            foreach (DataRow r in dt.Rows)
             {
                 chart.data.Add(Convert.ToDouble(r["SET_TEMP"].ToString()));
-                chart.Labels.Add(r["TIME"].ToString());
+                chart.Labels.Add(Timer.GetTime(r["TIME"].ToString()));
+                chart.title = $"{table}/{danji}";
             }
-            
             Vms.Add(chart);
-
-
         }
 
         public void ChartReset()
@@ -95,6 +97,14 @@ namespace MONITOR_APP.VIEWMODEL
             Vms.Clear();
         }
 
-        
+        public void GetDetailChart(ChartData d)
+        {
+            Console.WriteLine($"{d.title}");
+
+            Console.WriteLine($"{d.data.Count()}");
+
+        }
+        //SELECT DISTINCT DANJI_ID, BUILD_ID, HOUSE_ID, ROOM_ID FROM sensor_data;
+        // 전체 찾는 SQL
     }
 }

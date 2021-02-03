@@ -1,32 +1,50 @@
-﻿<Window
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MONITOR_APP.VIEW"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="MONITOR_APP.VIEW.SelectOptWindow"
-        mc:Ignorable="d" ResizeMode="NoResize"
-        Title="SelectOptWindow" Height="356.143" Width="360.286">
+        mc:Ignorable="d" ResizeMode="NoResize" Height="379" Width="350" Visibility="Visible" WindowStartupLocation="CenterScreen" WindowStyle="None"
+        BorderBrush="#FF9baec8" BorderThickness="0.3">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="4*"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" >
+        <Grid Grid.Row="0" Grid.Column="1" Background="#FF282c37" MouseLeftButtonDown="GridMouseDown" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock MouseDown="DoubleClick" Grid.Column="0"></TextBlock>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0" Grid.Column="1">
+                <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                        Width="25" Height="25" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}"
+                        IsCancel="True">
+                    <materialDesign:PackIcon Kind="Power"/>
+                </Button>
+            </StackPanel>
+
+        </Grid>
+
+        <Grid Grid.Row="1" >
+            <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="DB Table : " Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBox Text="cmd_set_temp_log" x:Name="TABLE" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" IsEnabled="False" Margin="10,0,10,0"/>
+            <TextBox Text="sensor_data" x:Name="TABLE" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" IsEnabled="False" Margin="10,0,30,0"/>
         </Grid>
         <Separator Grid.Row="0" VerticalAlignment="Bottom"/>
 
-        <Grid Grid.Row="1" >
+        <Grid Grid.Row="2" Background="#FFD8D8D8" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -36,55 +54,50 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
+            <TextBlock Text="Input" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0" FontSize="20"/>
 
-            <TextBlock Text="DANJI ID : " Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" /> 
-            <TextBox Text="2323" Grid.Column="1" x:Name="ID_DANJI" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" /> 
-            <TextBlock Text="BUILD ID : " Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" /> 
-            <TextBox Text="202" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" /> 
-            <TextBlock Text="HOUSE ID : " Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" /> 
-            <TextBox Text="101" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" /> 
-            <TextBlock Text="ROOM ID : " Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" /> 
-            <TextBox Text="2" Grid.Column="3" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" /> 
+            <TextBlock Text="DANJI ID : " Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" />
+            <TextBox Text="" Grid.Column="1" x:Name="ID_DANJI" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" />
+            <TextBlock Text="BUILD ID : " Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" />
+            <TextBox Text="" Grid.Column="3" x:Name="ID_BUILD" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" />
+            <TextBlock Text="HOUSE ID : " Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" />
+            <TextBox Text="" Grid.Column="1" x:Name="ID_HOUSE" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" />
+            <TextBlock Text="ROOM ID : " Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" />
+            <TextBox Text="" Grid.Column="3" x:Name="ID_ROOM" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" />
         </Grid>
         <Separator Grid.Row="1" VerticalAlignment="Bottom"/>
 
 
-        <Grid Grid.Row="2" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <Grid Grid.Row="3" Background="#FFD8D8D8" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="output" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="20" Margin="10,10,0,0"/>
+            <CheckBox Content="OP_ONOFF" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center"  VerticalAlignment="Center"  Width="110"/>
+            <CheckBox Content="CUR_TEMP" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center"  VerticalAlignment="Center"  Width="110"/>
+            <CheckBox Content="VALVE_STATUS" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="110"/>
 
-
-
-            <TextBlock Text="DANJI ID : " Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" />
-            <TextBox Text="2323" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" />
-            <TextBlock Text="BUILD ID : " Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" />
-            <TextBox Text="202" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" />
-            <TextBlock Text="HOUSE ID : " Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" />
-            <TextBox Text="101" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" />
-            <TextBlock Text="ROOM ID : " Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" />
-            <TextBox Text="2" Grid.Column="3" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" />
 
         </Grid>
         <Separator Grid.Row="2" VerticalAlignment="Bottom"/>
 
 
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="ok" Height="Auto" Margin="15" Click="Buton_OK"/>
-            <Button Grid.Column="1" Content="no" Height="Auto" Margin="15" IsCancel="True"/>
+            <Button Grid.Column="0" Content="ok" Height="Auto" Margin="15" Click="Buton_OK" Background="#FF3872C8"/>
+            <Button Grid.Column="1" Content="no" Height="Auto" Margin="15" IsCancel="True" Background="#FF3872C8"/>
         </Grid>
 
     </Grid>

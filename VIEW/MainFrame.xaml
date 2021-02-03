@@ -6,28 +6,33 @@
         xmlns:local="clr-namespace:MONITOR_APP.VIEW"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d" Height="740" Width="1100"
-        ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None"
+        BorderBrush="#FF9baec8" BorderThickness="0.3">
     <Grid>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="1" Background="#FF053E95" MouseDown="GridMouseDown">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0">
+        <Grid Grid.Row="0" Background="#FF282c37" MouseLeftButtonDown="GridMouseDown" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock MouseDown="DoubleClick" Grid.Column="0"></TextBlock>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0" Grid.Column="1">
                 <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
-                        Width="25" Height="25" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}">
-                    <materialDesign:PackIcon Kind="Bell"/>
+                        Width="25" Height="25" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}"
+                        Click="Button_Minimize">
+                    <materialDesign:PackIcon Kind="Minus"/>
                 </Button>
                 <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
-                        Width="25" Height="25" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}">
-                    <materialDesign:PackIcon Kind="Account"/>
+                        Width="25" Height="25" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}"
+                        Click="Button_Maximize">
+                    <materialDesign:PackIcon Kind="ArrangeBringForward"/>
                 </Button>
                 <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
                         Width="25" Height="25" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}"
@@ -35,28 +40,35 @@
                     <materialDesign:PackIcon Kind="Power"/>
                 </Button>
             </StackPanel>
-            
+
         </Grid>
 
 
 
-        <Grid Grid.Column="1" Grid.Row="1">
+        <Grid Grid.Row="1" Background="#FF9baec8">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="6*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="220*"/>
+                <ColumnDefinition Width="223*"/>
+                <ColumnDefinition Width="437*"/>
+                <ColumnDefinition Width="110*"/>
+                <ColumnDefinition Width="110*"/>
             </Grid.ColumnDefinitions>
 
-     
 
-            <Image Grid.Column="0" Source="/MONITOR_APP;component/Resources/Hansung.JPG"/>
+            <Button Grid.Column="0" Height="auto" Background="{x:Null}" BorderBrush="{x:Null}" Click="Button_Main" HorizontalAlignment="Left">
+                <Image Source="/MONITOR_APP;component/Resources/HanSung remove.png" Margin="0" />
+            </Button>
 
-            <Button Content="Button A" Grid.Column="2" Height="Auto" Background="#FF6CB92E"/>
-            <Button Content="DB CONNECT" Grid.Column="3" Height="Auto" 
-                    Background="#FF6CB92E" Click="Button_DBConn" />
+
+
+
+            <Button Grid.Column="4" 
+                        Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_DBConn">
+                <materialDesign:PackIcon Kind="DatabaseCheck" Margin="10" Width="auto" Height="auto"/>
+            </Button>
+
 
         </Grid>
-        <Frame Grid.Column="1" Grid.Row="2" Source="MainPage.xaml"/>
+        <Frame Grid.Row="2" Name="Page" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

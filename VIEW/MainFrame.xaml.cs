@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace MONITOR_APP.VIEW
@@ -25,13 +26,23 @@ namespace MONITOR_APP.VIEW
     {
         BASE head;
         MV_MainFrame vm;
+        MainPage mp;
         public MainFrame()
         {
 
             InitializeComponent();
+
             head = BASE.getBASE();
             vm = head.getMV_MainFrame();
+            
             this.DataContext = vm;
+            //Page.Source = new Uri("MainPage.xaml", UriKind.Relative);
+            
+            mp = new MainPage();
+            //mp.f(NavigationService);
+            Page.NavigationService.Navigate(mp);
+
+            head.newConnect("52.79.127.111", "3306", "hansung_db", "hansung", "aidb4231@");
         }
 
         #region Event
@@ -51,6 +62,29 @@ namespace MONITOR_APP.VIEW
             head.newConnect("52.79.127.111", "3306", "hansung_db", "hansung", "aidb4231@");
         }
 
+
+        private void Button_Maximize(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = (this.WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
+        }
+
+        private void Button_Minimize(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+        private void DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed && e.ClickCount == 2)
+            {
+                this.WindowState = (this.WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
+            }
+
+        }
+
+        private void Button_Main(object sender, RoutedEventArgs e)
+        {
+            mp.GridTurnOnOff();
+        }
         #endregion
     }
 }

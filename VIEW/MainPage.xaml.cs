@@ -51,7 +51,7 @@ namespace MONITOR_APP.VIEW
 
         private void Button_ADD(object sender, RoutedEventArgs e)
         {
-            vm.CreateChart();
+            vm.RequestSelect();
         }
 
         private void Button_CLEAR(object sender, RoutedEventArgs e)
@@ -78,21 +78,21 @@ namespace MONITOR_APP.VIEW
         {
             if ((e.LeftButton == MouseButtonState.Pressed) && isDrag == true)
             {
-                ListBoxItem listViewItem = FindAncestor<ListBoxItem>
+                ListBoxItem listboxitem = FindAncestor<ListBoxItem>
                                                 ((DependencyObject)e.OriginalSource);
 
-                if (listViewItem == null)
+                if (listboxitem == null)
                     return;
 
-                object item = listViewItem.DataContext;
+                object item = listboxitem.DataContext;
 
                 indexDrag = listBox.Items.IndexOf(item);
 
 
-                ChartData content = (ChartData)(listViewItem.Content);
+                ChartData content = (ChartData)(listboxitem.Content);
 
                 DataObject data = new DataObject("MOVE", content);
-                DragDrop.DoDragDrop(listViewItem, data, DragDropEffects.Move);
+                DragDrop.DoDragDrop(listboxitem, data, DragDropEffects.Move);
             }
 
         }
@@ -145,8 +145,29 @@ namespace MONITOR_APP.VIEW
             return null;
         }
 
+
         #endregion
 
-        
+        private void ListBox_LeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if(isDrag == true)
+            {
+                ListBoxItem listboxitem = FindAncestor<ListBoxItem>
+                                                  ((DependencyObject)e.OriginalSource);
+
+                ChartData content = (ChartData)(listboxitem.Content);
+
+                vm.GetDetailChart(content);
+
+            }
+
+        }
+
+
+        public void GridTurnOnOff()
+        {
+            Grid_side.Visibility = (Grid_side.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
+            Col.Width = (Grid_side.Visibility == Visibility.Visible) ? new GridLength(1,GridUnitType.Star) : GridLength.Auto;
+        }
     }
 }

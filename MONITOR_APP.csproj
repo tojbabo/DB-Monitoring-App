@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4EDB4593-9447-4ECD-8093-2C4070E1DFFE}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>MONITOR_APP</RootNamespace>
     <AssemblyName>MONITOR_APP</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -97,10 +97,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MODEL\DBData.cs" />
-    <Compile Include="MODEL\ChartData2.cs" />
     <Compile Include="MODEL\ChartData.cs" />
-    <Compile Include="UTILITY\CustomVm.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="UTILITY\MySQL.cs" />
+    <Compile Include="UTILITY\Timer.cs" />
     <Compile Include="VIEWMODEL\BASE.cs" />
     <Compile Include="VIEWMODEL\MV_MainFrame.cs" />
     <Compile Include="VIEWMODEL\MV_MainPage.cs" />
@@ -120,11 +124,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -176,6 +175,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\HanSung.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\HanSung remove.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" />

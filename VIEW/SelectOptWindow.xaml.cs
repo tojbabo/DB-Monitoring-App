@@ -29,11 +29,33 @@ namespace MONITOR_APP.VIEW
 
         private void Buton_OK(object sender, RoutedEventArgs e)
         {
-            string a = $"{TABLE.Text}\\{ID_DANJI.Text}\\*\\*\\*\\ABC";
+            string table = TABLE.Text;
+            string danji = ID_DANJI.Text;
+            string build = ID_BUILD.Text;
+            string house = ID_HOUSE.Text;
+            string room = ID_ROOM.Text;
+           
+
+            string a = $"{table}\\{danji}\\{build}\\{house}\\{room}\\ABC";
             
 
             if (OnChildTextInputEvent != null) OnChildTextInputEvent(a);
 
         }
+
+        #region Event
+        private void GridMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
+        private void DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed && e.ClickCount == 2)
+            {
+                this.WindowState = (this.WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
+            }
+
+        }
+        #endregion
     }
 }

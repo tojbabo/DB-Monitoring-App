@@ -107,10 +107,8 @@ namespace MONITOR_APP.UTILITY
             }
         }
 
-        static public DataTable SelectTable(MySqlConnection conn, string table, string danji)
+        static public DataTable SelectTable(MySqlConnection conn, string query)
         {
-            string query = $"SELECT * FROM {table} WHERE DANJI_ID = {danji};";
-
             if (DBOpen(conn) == true)
             {
                 try
@@ -137,6 +135,26 @@ namespace MONITOR_APP.UTILITY
             {
                 return null;
             }
+        }
+
+        static public string MakeQuery(string[] opts)
+        {
+            string table = opts[0];
+            string danji = opts[1];
+            string build = opts[2];
+            string house = opts[3];
+            string room = opts[4];
+
+            string query = $"SELECT * FROM {table} WHERE ID IS NOT NULL ";
+
+            if (danji != "") danji = $" AND DANJI_ID = '{danji}'";
+            if (build != "") build = $" AND BUILD_ID = '{build}'";
+            if (house != "") house = $" AND HOUSE_ID = '{house}'" ;
+            if (room != "") room = $" AND ROOM_ID = '{room}'";
+
+            query = query + danji + build + house + room + " limit 100;";
+
+            return query;
         }
 
     }

@@ -35,7 +35,7 @@ namespace MONITOR_APP.VIEWMODEL
         private MySqlConnection conn;
         public MySqlConnection newConnect(string ip, string port, string db_name, string id, string pass)
         {
-            conn = MySQL.Connect("52.79.127.111", "3306", "hansung_db", "hansung", "aidb4231@");
+            if(conn == null) conn = MySQL.Connect("52.79.127.111", "3306", "hansung_db", "hansung", "aidb4231@");
        
             return conn;
         }

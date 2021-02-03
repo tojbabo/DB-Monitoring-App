@@ -11,11 +11,11 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="9*"/>
+            <ColumnDefinition Width="*" x:Name="Col"/>
+            <ColumnDefinition Width="8*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0" Background="#FF053E95" >
+        <Grid Grid.Column="0" Background="#FF9baec8" Name="Grid_side" Height="auto">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -28,25 +28,30 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
-            <Button Grid.Row="0" Content="ADD" Click="Button_ADD" Height="Auto" Background="#FF053E95" />
-            <Button Grid.Row="1" Content="Button 2"  Height="Auto"  Background="#FF164FA6" />
-            <Button Grid.Row="2" Content="Button 3" Height="Auto" Background="#FF3872C8"/>
-            <Button Grid.Row="3" Content="CLEAR" Click="Button_CLEAR" Height="Auto" Background="#FF5A94EA"/>
+            <TextBlock Grid.Row="0" Text="설정" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="30" Foreground="#FFd9e1e8" FontStyle="Normal"></TextBlock>
+            <Separator Grid.Row="0" VerticalAlignment="Bottom" Margin="5" Background="#FFd9e1e8"></Separator>
+            <Button Grid.Row="1" Content="ADD"  HorizontalContentAlignment="Right"  Width="auto" Click="Button_ADD" Height="Auto" Foreground="#FFd9e1e8" Background="{x:Null}" BorderBrush="{x:Null}"/>
+            <Button Grid.Row="2" Foreground="#FF282c37" Content="CLEAR" Click="Button_CLEAR" Height="Auto" Background="#FFd9e1e8" BorderBrush="{x:Null}"/>
 
         </Grid>
-        
-        <Grid Grid.Column="1">
-            <ListBox Grid.Column="1" Name="listBox" ItemsSource="{Binding Vms}"
-                 HorizontalContentAlignment="Stretch"
-                 ScrollViewer.CanContentScroll="False"
-                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                 PreviewMouseLeftButtonDown="ListBox_LeftClick"
-                 PreviewMouseMove="ListBox_Drag"
-                 Drop="ListBox_Drop"
-                 AllowDrop="True">
 
-                
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="7*"/>
+            </Grid.RowDefinitions>
+            <ListBox Name="listBox" ItemsSource="{Binding Vms}" 
+                     HorizontalContentAlignment="Stretch"
+                    ScrollViewer.CanContentScroll="False"
+                    ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                    PreviewMouseLeftButtonDown="ListBox_LeftClick"
+                    MouseLeftButtonUp="ListBox_LeftButtonUp"
+                    PreviewMouseMove="ListBox_Drag"
+                    Drop="ListBox_Drop"
+                    AllowDrop="True" Grid.RowSpan="2">
+
+
 
                 <!-- 리스트박스 선택 안되게 하는 코드
             <ListBox.ItemContainerStyle>
@@ -62,15 +67,15 @@
                         <live:CartesianChart  Height="250"  
                                           LegendLocation="Top">
                             <live:CartesianChart.Series>
-                                <live:LineSeries Title="asdf" Values="{Binding data}"></live:LineSeries>
-                                <live:LineSeries Title="zzzz" Values="4,2,3,4"></live:LineSeries>
+                                <live:LineSeries Title="{Binding title}" Values="{Binding data}"></live:LineSeries>
+                                <!--   <live:LineSeries Title="{Binding title}" Values="4,2,3,4"></live:LineSeries>-->
                             </live:CartesianChart.Series>
 
-                            
+
                             <live:CartesianChart.Resources>
                                 <Style TargetType="live:DefaultTooltip">
-                                    <Setter Property="Background" Value="DarkOrange"></Setter>
-                                    <Setter Property="Foreground" Value="White"></Setter>
+                                    <Setter Property="Background" Value="White"></Setter>
+                                    <Setter Property="Foreground" Value="#FF6CB92E"></Setter>
                                     <Setter Property="ShowTitle" Value="False"></Setter>
                                     <!--new property-->
                                     <Setter Property="ShowSeries" Value="True"></Setter>
@@ -88,9 +93,10 @@
 
                             <live:CartesianChart.AxisX>
                                 <live:Axis Title="Time" LabelsRotation="20"  Labels="{Binding Labels}" Position="LeftBottom">
-                                    <live:Axis.Separator >
-                                        <live:Separator Step="1" />
+                                    <!--     <live:Axis.Separator >
+                                        <live:Separator Step="1" /> 
                                     </live:Axis.Separator>
+                                    -->
                                 </live:Axis>
                             </live:CartesianChart.AxisX>
                             <live:CartesianChart.AxisY>
@@ -105,8 +111,8 @@
             </ListBox>
         </Grid>
 
-        
-        
+
+
 
 
     </Grid>

@@ -10,14 +10,13 @@ namespace MONITOR_APP.MODEL
 {
     public class ChartData
     {
-        public ChartValues<CustomVm> Vm { get; set; }
+        public string title { get; set; }
         public ChartValues<double> data { get; set; }
         public List<string> Labels { get; set; }
 
         public ChartData()
         {
             data = new ChartValues<double>();
-            Vm = new ChartValues<CustomVm>();
             Labels = new List<string>();
         }
     }
