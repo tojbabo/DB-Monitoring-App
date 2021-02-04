@@ -14,10 +14,15 @@ namespace MONITOR_APP.MODEL
         public ChartValues<double> data { get; set; }
         public List<string> Labels { get; set; }
 
+        public bool selected { get; set; }
+
+        public SearchData searches { get; set; }
+
         public ChartData()
         {
             data = new ChartValues<double>();
             Labels = new List<string>();
+            searches = new SearchData();
         }
     }
 }

@@ -27,6 +27,9 @@ namespace MONITOR_APP.VIEW
         public delegate void OnChildTextInputHandler(string Parameter);
         public event OnChildTextInputHandler OnChildTextInputEvent;
 
+
+        #region Event
+
         private void Buton_OK(object sender, RoutedEventArgs e)
         {
             string table = TABLE.Text;
@@ -42,8 +45,6 @@ namespace MONITOR_APP.VIEW
             if (OnChildTextInputEvent != null) OnChildTextInputEvent(a);
 
         }
-
-        #region Event
         private void GridMouseDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
@@ -56,6 +57,20 @@ namespace MONITOR_APP.VIEW
             }
 
         }
+        public void SetData(string datas)
+        {
+            string[] opts = datas.Split('\\');
+            ID_DANJI.Text = opts[0];
+            ID_BUILD.Text = opts[1];
+            ID_HOUSE.Text = opts[2];
+            ID_ROOM.Text = opts[3];
+        }
         #endregion
+
+        private void Close(object sender, RoutedEventArgs e)
+        {
+            if (OnChildTextInputEvent != null) OnChildTextInputEvent(null);
+            this.Close();
+        }
     }
 }

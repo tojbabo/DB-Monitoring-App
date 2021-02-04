@@ -98,19 +98,18 @@
     </Compile>
     <Compile Include="MODEL\DBData.cs" />
     <Compile Include="MODEL\ChartData.cs" />
+    <Compile Include="MODEL\SearchData.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="UTILITY\MySQL.cs" />
-    <Compile Include="UTILITY\Timer.cs" />
+    <Compile Include="UTILITY\TimeConverter.cs" />
+    <Compile Include="UTILITY\VisibleConverter.cs" />
     <Compile Include="VIEWMODEL\BASE.cs" />
-    <Compile Include="VIEWMODEL\MV_MainFrame.cs" />
-    <Compile Include="VIEWMODEL\MV_MainPage.cs" />
-    <Compile Include="VIEW\CustomTooltip.xaml.cs">
-      <DependentUpon>CustomTooltip.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="VIEWMODEL\VM_MainFrame.cs" />
+    <Compile Include="VIEWMODEL\VM_MainPage.cs" />
     <Compile Include="VIEW\MainFrame.xaml.cs">
       <DependentUpon>MainFrame.xaml</DependentUpon>
     </Compile>
@@ -144,10 +143,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="VIEW\CustomTooltip.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="VIEW\MainFrame.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

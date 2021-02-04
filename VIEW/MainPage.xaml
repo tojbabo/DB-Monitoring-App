@@ -4,17 +4,25 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MONITOR_APP.VIEW"
+      xmlns:util="clr-namespace:MONITOR_APP.UTILITY"
       xmlns:live="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage">
 
+    <Page.Resources>
+        <util:VisibleConverter x:Key="converter"/>
+    </Page.Resources>
+
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" x:Name="Col"/>
-            <ColumnDefinition Width="8*"/>
+            <ColumnDefinition Width="150" x:Name="Col"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        
         <Grid Grid.Column="0" Background="#FF9baec8" Name="Grid_side" Height="auto">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -30,90 +38,150 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="설정" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="30" Foreground="#FFd9e1e8" FontStyle="Normal"></TextBlock>
             <Separator Grid.Row="0" VerticalAlignment="Bottom" Margin="5" Background="#FFd9e1e8"></Separator>
-            <Button Grid.Row="1" Content="ADD"  HorizontalContentAlignment="Right"  Width="auto" Click="Button_ADD" Height="Auto" Foreground="#FFd9e1e8" Background="{x:Null}" BorderBrush="{x:Null}"/>
-            <Button Grid.Row="2" Foreground="#FF282c37" Content="CLEAR" Click="Button_CLEAR" Height="Auto" Background="#FFd9e1e8" BorderBrush="{x:Null}"/>
+            <Button Grid.Row="1" FontSize="20" Click="Button_ADD" Content="Add"  HorizontalContentAlignment="Right"  Width="auto" Height="Auto" Foreground="#FFd9e1e8" Background="{x:Null}" BorderBrush="{x:Null}"/>
+            <Button Grid.Row="2" FontSize="20" Click="Button_SEARCH" Content="Search"  HorizontalContentAlignment="Right"  Width="auto"  Height="Auto" Foreground="#FFd9e1e8" Background="{x:Null}" BorderBrush="{x:Null}"/>
+            <Button Grid.Row="3" FontSize="20" Click="Button_CLEAR" Content="CLEAR" Foreground="#FF282c37" Height="Auto" Background="#FFd9e1e8" BorderBrush="{x:Null}"/>
 
         </Grid>
+        
+        <Grid Grid.Column="1" Width="280" Background="#FFd9e1e8" x:Name="Grid_search" Visibility="Collapsed">
+            <ListView Name="listview" ItemsSource="{Binding Searches}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+                      MouseDoubleClick="ListView_DoubleClick">
+                <ListView.View>
+                    <GridView>
+                        <GridView.ColumnHeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                <Setter Property="Width" Value="70"/>
+                                <Setter Property="Height" Value="50"/>
+                                <Setter Property="Padding" Value="10,0,0,0"/>
+                                <Setter Property="Foreground" Value="#FF282c37"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="IsHitTestVisible" Value="False"/>
+                            </Style>
+                        </GridView.ColumnHeaderContainerStyle>
+                        
+                        <GridViewColumn Header="DANJI" DisplayMemberBinding="{Binding danji}"/>
+                        <GridViewColumn Header="BUILD" DisplayMemberBinding="{Binding build}"/>
+                        <GridViewColumn Header="HOUSE" DisplayMemberBinding="{Binding house}"/>
+                        <GridViewColumn Header="ROOM" DisplayMemberBinding="{Binding room}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
 
-
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="7*"/>
-            </Grid.RowDefinitions>
+        <Grid Grid.Column="2">
             <ListBox Name="listBox" ItemsSource="{Binding Vms}" 
-                     HorizontalContentAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
                     ScrollViewer.CanContentScroll="False"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                    PreviewMouseLeftButtonDown="ListBox_LeftClick"
                     MouseLeftButtonUp="ListBox_LeftButtonUp"
                     PreviewMouseMove="ListBox_Drag"
                     Drop="ListBox_Drop"
                     AllowDrop="True" Grid.RowSpan="2">
 
-
-
-                <!-- 리스트박스 선택 안되게 하는 코드
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="{x:Type ListBoxItem}">
-                    <Setter Property="Focusable" Value="False"/>
-                    <Setter Property="IsHitTestVisible" Value="False" />
-                </Style>
-            </ListBox.ItemContainerStyle>
-            -->
-
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <live:CartesianChart  Height="250"  
-                                          LegendLocation="Top">
-                            <live:CartesianChart.Series>
-                                <live:LineSeries Title="{Binding title}" Values="{Binding data}"></live:LineSeries>
-                                <!--   <live:LineSeries Title="{Binding title}" Values="4,2,3,4"></live:LineSeries>-->
-                            </live:CartesianChart.Series>
+                        <StackPanel>
+                            <live:CartesianChart Height="250"  
+                                          LegendLocation="Top"  MouseDown="ListBox_LeftClick">
+                                <live:CartesianChart.Series>
+                                    <live:LineSeries Title="{Binding title}" Values="{Binding data}"></live:LineSeries>
+                                    <!--   <live:LineSeries Title="{Binding title}" Values="4,2,3,4"></live:LineSeries>-->
+                                </live:CartesianChart.Series>
 
 
-                            <live:CartesianChart.Resources>
-                                <Style TargetType="live:DefaultTooltip">
-                                    <Setter Property="Background" Value="White"></Setter>
-                                    <Setter Property="Foreground" Value="#FF6CB92E"></Setter>
-                                    <Setter Property="ShowTitle" Value="False"></Setter>
-                                    <!--new property-->
-                                    <Setter Property="ShowSeries" Value="True"></Setter>
-                                    <!--new property-->
-                                    <Setter Property="FontSize" Value="16"></Setter>
-                                    <Setter Property="FontWeight" Value="Bold"></Setter>
-                                    <Setter Property="CornerRadius" Value="20"></Setter>
-                                    <Setter Property="Width" Value="Auto"></Setter>
-                                    <Setter Property="Height" Value="Auto"></Setter>
-                                    <Setter Property="BorderThickness" Value="0"></Setter>
-                                </Style>
-                            </live:CartesianChart.Resources>
+                                <live:CartesianChart.Resources>
+                                    <Style TargetType="live:DefaultTooltip">
+                                        <Setter Property="Background" Value="White"></Setter>
+                                        <Setter Property="Foreground" Value="#FF6CB92E"></Setter>
+                                        <Setter Property="ShowTitle" Value="False"></Setter>
+                                        <!--new property-->
+                                        <Setter Property="ShowSeries" Value="True"></Setter>
+                                        <!--new property-->
+                                        <Setter Property="FontSize" Value="16"></Setter>
+                                        <Setter Property="FontWeight" Value="Bold"></Setter>
+                                        <Setter Property="CornerRadius" Value="20"></Setter>
+                                        <Setter Property="Width" Value="Auto"></Setter>
+                                        <Setter Property="Height" Value="Auto"></Setter>
+                                        <Setter Property="BorderThickness" Value="0"></Setter>
+                                    </Style>
+                                </live:CartesianChart.Resources>
 
 
 
-                            <live:CartesianChart.AxisX>
-                                <live:Axis Title="Time" LabelsRotation="20"  Labels="{Binding Labels}" Position="LeftBottom">
-                                    <!--     <live:Axis.Separator >
+                                <live:CartesianChart.AxisX>
+                                    <live:Axis Title="Time" LabelsRotation="20"  Labels="{Binding Labels}" Position="LeftBottom">
+                                        <!--     <live:Axis.Separator >
                                         <live:Separator Step="1" /> 
                                     </live:Axis.Separator>
                                     -->
-                                </live:Axis>
-                            </live:CartesianChart.AxisX>
-                            <live:CartesianChart.AxisY>
-                                <live:Axis Title="Measure" Position="LeftBottom"></live:Axis>
-                            </live:CartesianChart.AxisY>
+                                    </live:Axis>
+                                </live:CartesianChart.AxisX>
+                                <live:CartesianChart.AxisY>
+                                    <live:Axis Title="Measure" Position="LeftBottom"></live:Axis>
+                                </live:CartesianChart.AxisY>
 
-                        </live:CartesianChart>
+                            </live:CartesianChart>
+                            <Grid Visibility="{Binding selected, Converter={StaticResource converter}}" 
+                                  Background="#FF282c37" Height="60" >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="단지번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding searches.danji }" VerticalAlignment="Center" Foreground="#FFd9e1e8"/>
+                                    <TextBlock Grid.Column="2" Text="건물번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0"/>
+                                    <TextBlock Grid.Column="3" Text="{Binding searches.build }" VerticalAlignment="Center" Foreground="#FFd9e1e8"/>
+                                    <TextBlock Grid.Column="4" Text="집 번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0"/>
+                                    <TextBlock Grid.Column="5" Text="{Binding searches.house }" VerticalAlignment="Center" Foreground="#FFd9e1e8"/>
+                                    <TextBlock Grid.Column="6" Text="방 번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0"/>
+                                    <TextBlock Grid.Column="7" Text="{Binding searches.room }" VerticalAlignment="Center" Foreground="#FFd9e1e8"/>
+
+                                </Grid>
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <CheckBox Grid.Column="0" Content="현재 온도" Foreground="#FFd9e1e8"/>
+                                    <CheckBox Grid.Column="1" Content="목표 온도" Foreground="#FFd9e1e8"/>
+                                    <CheckBox Grid.Column="2" Content="기기 ON/OFF" Foreground="#FFd9e1e8"/>
+                                    <CheckBox Grid.Column="3" Content="aefawef" Foreground="#FFd9e1e8"/>
+                                    <CheckBox Grid.Column="4" Content="aefawef" Foreground="#FFd9e1e8"/>
+
+
+
+                                </Grid>
+                            </Grid>
+                            
+                        </StackPanel>
                     </DataTemplate>
 
                 </ListBox.ItemTemplate>
 
             </ListBox>
         </Grid>
-
-
-
-
 
     </Grid>
 </Page>

@@ -36,14 +36,16 @@ namespace MONITOR_APP.UTILITY
                     $"Port={port};" +
                     $"DATABASE={db_name};" +
                     $"UID={id};" +
-                    $"PASSWORD={pass};";
+                    $"PASSWORD={pass};" +
+                    $"Connection Timeout=60";
                 MySqlConnection connection = new MySqlConnection(connectionPath);
                 DBOpen(connection);
                 DBClose(connection);
 
+
                 return connection;
             }
-            catch (Exception e)
+            catch
             {
                 return null;
             }
@@ -115,8 +117,11 @@ namespace MONITOR_APP.UTILITY
                 {
                     MySqlCommand command = new MySqlCommand(query, conn);
 
+                    command.CommandTimeout = 120;
+
                     DataTable dt = new DataTable();
                     MySqlDataAdapter da = new MySqlDataAdapter(command);
+                    
                     da.Fill(dt);
 
                     DBClose(conn);
@@ -154,6 +159,16 @@ namespace MONITOR_APP.UTILITY
 
             query = query + danji + build + house + room + " limit 100;";
 
+            return query;
+        }
+
+        static public string SearchQuery(string table)
+        {
+            //string query = $"SELECT DISTINCT DANJI_ID, BUILD_ID, HOUSE_ID, ROOM_ID FROM {table};";
+            string query = $"SELECT DANJI_ID, BUILD_ID, HOUSE_ID, ROOM_ID, COUNT(*) " +
+                $"FROM {table} " +
+                $"WHERE DANJI_ID='2323' AND BUILD_ID='202' " +
+                $"GROUP BY DANJI_ID,BUILD_ID,HOUSE_ID,ROOM_ID";
             return query;
         }
 

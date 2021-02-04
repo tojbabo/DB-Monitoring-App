@@ -12,7 +12,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="4*"/>
             <RowDefinition Height="4*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1.5*"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Grid.Column="1" Background="#FF282c37" MouseLeftButtonDown="GridMouseDown" Grid.ColumnSpan="2">
@@ -26,14 +26,14 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0" Grid.Column="1">
                 <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
                         Width="25" Height="25" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}"
-                        IsCancel="True">
+                        Click="Close">
                     <materialDesign:PackIcon Kind="Power"/>
                 </Button>
             </StackPanel>
 
         </Grid>
 
-        <Grid Grid.Row="1" >
+        <Grid Grid.Row="1" Background="#FF9baec8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="5*"/>
@@ -44,7 +44,7 @@
         </Grid>
         <Separator Grid.Row="0" VerticalAlignment="Bottom"/>
 
-        <Grid Grid.Row="2" Background="#FFD8D8D8" >
+        <Grid Grid.Row="2" Background="#FFd9e1e8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -59,19 +59,19 @@
 
             <TextBlock Text="Input" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0" FontSize="20"/>
 
-            <TextBlock Text="DANJI ID : " Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" />
-            <TextBox Text="" Grid.Column="1" x:Name="ID_DANJI" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" />
-            <TextBlock Text="BUILD ID : " Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" />
-            <TextBox Text="" Grid.Column="3" x:Name="ID_BUILD" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" />
-            <TextBlock Text="HOUSE ID : " Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" />
-            <TextBox Text="" Grid.Column="1" x:Name="ID_HOUSE" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" />
-            <TextBlock Text="ROOM ID : " Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" />
-            <TextBox Text="" Grid.Column="3" x:Name="ID_ROOM" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10" />
+            <TextBlock Text="DANJI ID : " Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="14,13,13,13" />
+            <TextBox Text="" Grid.Column="1" x:Name="ID_DANJI" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10,10,10,9" />
+            <TextBlock Text="BUILD ID : " Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="13" />
+            <TextBox Text="" Grid.Column="4" x:Name="ID_BUILD" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="1,10,10,9" />
+            <TextBlock Text="HOUSE ID : " Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="11,13,10,13" />
+            <TextBox Text="" Grid.Column="1" x:Name="ID_HOUSE" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10,10,10,9" />
+            <TextBlock Text="ROOM ID : " Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="11,13" />
+            <TextBox Text="" Grid.Column="4" x:Name="ID_ROOM" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="1,10,10,9" />
         </Grid>
         <Separator Grid.Row="1" VerticalAlignment="Bottom"/>
 
 
-        <Grid Grid.Row="3" Background="#FFD8D8D8" >
+        <Grid Grid.Row="3" Background="#FFd9e1e8" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -96,8 +96,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="ok" Height="Auto" Margin="15" Click="Buton_OK" Background="#FF3872C8"/>
-            <Button Grid.Column="1" Content="no" Height="Auto" Margin="15" IsCancel="True" Background="#FF3872C8"/>
+            <Button Grid.Column="0" FontSize="20" Content="OK" Click="Buton_OK"  HorizontalContentAlignment="Center"  Width="auto" Height="Auto" Background="{x:Null}" Foreground="#FF282c37"  BorderBrush="{x:Null}"/>
+            <Button Grid.Column="1" FontSize="20" Content="NO" Click="Close" HorizontalContentAlignment="Center"  Width="auto" Height="Auto" Background="{x:Null}" Foreground="#FF282c37"  BorderBrush="{x:Null}"/>
         </Grid>
 
     </Grid>

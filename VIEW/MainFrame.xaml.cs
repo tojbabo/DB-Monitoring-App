@@ -25,24 +25,20 @@ namespace MONITOR_APP.VIEW
     public partial class MainFrame : Window
     {
         BASE head;
-        MV_MainFrame vm;
+        VM_MainFrame vm;
         MainPage mp;
         public MainFrame()
         {
-
             InitializeComponent();
 
             head = BASE.getBASE();
-            vm = head.getMV_MainFrame();
+            head.newConnect("52.79.127.111", "3306", "hansung_db", "hansung", "aidb4231@");
             
+            vm = head.getMV_MainFrame();
             this.DataContext = vm;
-            //Page.Source = new Uri("MainPage.xaml", UriKind.Relative);
             
             mp = new MainPage();
-            //mp.f(NavigationService);
             Page.NavigationService.Navigate(mp);
-
-            head.newConnect("52.79.127.111", "3306", "hansung_db", "hansung", "aidb4231@");
         }
 
         #region Event

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MONITOR_APP.VIEWMODEL
 {
-    public class MV_MainFrame
+    public class VM_MainFrame
     {
     }
 }

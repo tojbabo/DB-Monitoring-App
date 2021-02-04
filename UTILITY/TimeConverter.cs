@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MONITOR_APP.UTILITY
 {
-    static class Timer
+    static class TimeConverter
     {
         public static DateTime ConvertTimestamp(double timestamp)
         {
@@ -24,7 +24,7 @@ namespace MONITOR_APP.UTILITY
         public static string GetTime(string timestamp)
         {
             double d = Convert.ToDouble(timestamp);
-            var val = Timer.ConvertTimestamp(d);
+            var val = TimeConverter.ConvertTimestamp(d);
             return $"{val.Hour}:{val.Minute}:{val.Second}";
         }
     }

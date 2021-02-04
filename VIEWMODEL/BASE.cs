@@ -21,13 +21,13 @@ namespace MONITOR_APP.VIEWMODEL
             return staticBASE;
         }
 
-        private MV_MainFrame mv_mainframe;
-        public MV_MainFrame getMV_MainFrame()
+        private VM_MainFrame mv_mainframe;
+        public VM_MainFrame getMV_MainFrame()
         {
             return mv_mainframe;
         }
-        private MV_MainPage mv_mainpage;
-        public MV_MainPage getMV_MainPage()
+        private VM_MainPage mv_mainpage;
+        public VM_MainPage getMV_MainPage()
         { 
             return mv_mainpage;
         }
@@ -50,8 +50,8 @@ namespace MONITOR_APP.VIEWMODEL
         }
         private void Initalize()
         {
-            mv_mainframe = new MV_MainFrame();
-            mv_mainpage = new MV_MainPage();
+            mv_mainframe = new VM_MainFrame();
+            mv_mainpage = new VM_MainPage();
         }
 
         

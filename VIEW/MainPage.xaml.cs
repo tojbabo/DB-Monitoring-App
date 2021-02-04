@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Security.Permissions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,7 +32,7 @@ namespace MONITOR_APP.VIEW
     public partial class MainPage : Page
     {
         BASE head;
-        MV_MainPage vm;
+        VM_MainPage vm;
         
         public MainPage()
         {
@@ -39,24 +40,61 @@ namespace MONITOR_APP.VIEW
             head = BASE.getBASE();
 
             vm = head.getMV_MainPage();
-            this.DataContext = vm;            
+            this.DataContext = vm;
 
-            
-
-
+            Thread t = new Thread(vm.CreateSearchData);
+            t.Start();
+            //vm.CreateSearchData();
 
         }
-
+        
         #region Event
 
         private void Button_ADD(object sender, RoutedEventArgs e)
         {
             vm.RequestSelect();
         }
-
         private void Button_CLEAR(object sender, RoutedEventArgs e)
         {
             vm.ChartReset();
+        }
+        private void ListBox_LeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if(isDrag == true)
+            {
+                ListBoxItem listboxitem = FindAncestor<ListBoxItem>
+                                                  ((DependencyObject)e.OriginalSource);
+                if (listboxitem == null) return;
+
+                ChartData content = (ChartData)(listboxitem.Content);
+
+                vm.GetDetailChart(content);
+
+                content.selected = content.selected ? false :true;
+
+                int index = vm.Vms.IndexOf(content);
+
+                vm.Vms.Remove(content);
+                vm.Vms.Insert(index, content);
+
+            }
+
+        }
+        public void GridTurnOnOff()
+        {
+            Grid_side.Visibility = (Grid_side.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
+            Col.Width = (Grid_side.Visibility == Visibility.Visible) ? new GridLength(/*1,GridUnitType.Star*/130) : GridLength.Auto;
+        }
+        private void Button_SEARCH(object sender, RoutedEventArgs e)
+        {
+            //vm.f();
+            Grid_search.Visibility = (Grid_search.Visibility == Visibility.Visible)?Visibility.Collapsed:Visibility.Visible;
+        }
+        private void ListView_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var item = (SearchData)listview.SelectedItem;
+            string opt = $"{item.danji}\\{item.build}\\{item.house}\\{item.room}";
+            vm.RequestSelect(opt);
         }
 
         #endregion
@@ -103,6 +141,8 @@ namespace MONITOR_APP.VIEW
             {
                 ChartData content = e.Data.GetData("MOVE") as ChartData;
 
+                if (indexDrag == -1) return;
+                    
 
                 int index = -1;
                 var temp = FindAncestor<ListBoxItem>
@@ -146,28 +186,14 @@ namespace MONITOR_APP.VIEW
         }
 
 
+
+
+
         #endregion
 
-        private void ListBox_LeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void Check_Event(object sender, EventArgs e)
         {
-            if(isDrag == true)
-            {
-                ListBoxItem listboxitem = FindAncestor<ListBoxItem>
-                                                  ((DependencyObject)e.OriginalSource);
-
-                ChartData content = (ChartData)(listboxitem.Content);
-
-                vm.GetDetailChart(content);
-
-            }
-
-        }
-
-
-        public void GridTurnOnOff()
-        {
-            Grid_side.Visibility = (Grid_side.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
-            Col.Width = (Grid_side.Visibility == Visibility.Visible) ? new GridLength(1,GridUnitType.Star) : GridLength.Auto;
+            Console.WriteLine("goood");
         }
     }
 }
