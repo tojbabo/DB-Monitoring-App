@@ -82,9 +82,9 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="output" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="20" Margin="10,10,0,0"/>
-            <CheckBox Content="OP_ONOFF" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center"  VerticalAlignment="Center"  Width="110"/>
-            <CheckBox Content="CUR_TEMP" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center"  VerticalAlignment="Center"  Width="110"/>
-            <CheckBox Content="VALVE_STATUS" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="110"/>
+            <CheckBox x:Name="ONFF" Content="OP ONOFF" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center"  VerticalAlignment="Center"  Width="110" IsChecked="True"/>
+            <CheckBox x:Name="CURTMP" Content="CUR TMP" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center"  VerticalAlignment="Center"  Width="110" IsChecked="True"/>
+            <CheckBox x:Name="SETTMP" Content="SET TMP" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="110" IsChecked="True"/>
 
 
         </Grid>

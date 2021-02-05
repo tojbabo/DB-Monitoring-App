@@ -37,13 +37,16 @@ namespace MONITOR_APP.VIEW
             string build = ID_BUILD.Text;
             string house = ID_HOUSE.Text;
             string room = ID_ROOM.Text;
-           
 
-            string a = $"{table}\\{danji}\\{build}\\{house}\\{room}\\ABC";
-            
+
+            string a = $"{table}\\{danji}\\{build}\\{house}\\{room}\\{CURTMP.IsChecked}\\{SETTMP.IsChecked}\\{ONFF.IsChecked}";
 
             if (OnChildTextInputEvent != null) OnChildTextInputEvent(a);
-
+        }
+        private void Close(object sender, RoutedEventArgs e)
+        {
+            if (OnChildTextInputEvent != null) OnChildTextInputEvent(null);
+            this.Close();
         }
         private void GridMouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -67,10 +70,5 @@ namespace MONITOR_APP.VIEW
         }
         #endregion
 
-        private void Close(object sender, RoutedEventArgs e)
-        {
-            if (OnChildTextInputEvent != null) OnChildTextInputEvent(null);
-            this.Close();
-        }
     }
 }

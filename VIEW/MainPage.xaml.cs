@@ -58,28 +58,6 @@ namespace MONITOR_APP.VIEW
         {
             vm.ChartReset();
         }
-        private void ListBox_LeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if(isDrag == true)
-            {
-                ListBoxItem listboxitem = FindAncestor<ListBoxItem>
-                                                  ((DependencyObject)e.OriginalSource);
-                if (listboxitem == null) return;
-
-                ChartData content = (ChartData)(listboxitem.Content);
-
-                vm.GetDetailChart(content);
-
-                content.selected = content.selected ? false :true;
-
-                int index = vm.Vms.IndexOf(content);
-
-                vm.Vms.Remove(content);
-                vm.Vms.Insert(index, content);
-
-            }
-
-        }
         public void GridTurnOnOff()
         {
             Grid_side.Visibility = (Grid_side.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
@@ -104,14 +82,33 @@ namespace MONITOR_APP.VIEW
         private bool isDrag = false;
         private int indexDrag = -1;
 
+        // 리스트 박스 단순 왼쪽 클릭 - 리스트 박스 요소가 아닌 그래프를 클릭해야 반응
         private void ListBox_LeftClick(object sender, MouseButtonEventArgs e)
         {
-            var temp = FindAncestor<ListBoxItem>
+            /*var temp = FindAncestor<ListBoxItem>
                 ((DependencyObject)(listBox.InputHitTest(e.GetPosition(listBox))));
             if (temp != null)
-                isDrag = true;
-        }
+                isDrag = true;*/
 
+            ListBoxItem listboxitem = FindAncestor<ListBoxItem>
+                                              ((DependencyObject)e.OriginalSource);
+            if (listboxitem == null) return;
+
+            ChartData content = (ChartData)(listboxitem.Content);
+            content.selected = content.selected ? false : true;
+            int index = vm.Vms.IndexOf(content);
+
+            Console.WriteLine("hoi");
+
+            /*vm.Vms.Remove(content);
+            vm.Vms.Insert(index, content);*/
+
+            content.ReFresh();
+
+            //vm.ChartRedraw(content);
+        }
+        
+        // 리스트 박스 위에서 마우스 움직임 감지
         private void ListBox_Drag(object sender, MouseEventArgs e)
         {
             if ((e.LeftButton == MouseButtonState.Pressed) && isDrag == true)
@@ -132,9 +129,9 @@ namespace MONITOR_APP.VIEW
                 DataObject data = new DataObject("MOVE", content);
                 DragDrop.DoDragDrop(listboxitem, data, DragDropEffects.Move);
             }
-
         }
 
+        // 드래그 중인 요소에 한해 드랍 이벤트
         private void ListBox_Drop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent("MOVE"))
@@ -148,8 +145,7 @@ namespace MONITOR_APP.VIEW
                 var temp = FindAncestor<ListBoxItem>
                                 ((DependencyObject)(listBox.InputHitTest(e.GetPosition(listBox))));
 
-                
-                object item = temp?.DataContext;
+                ChartData item = (ChartData)temp?.DataContext;
 
                 if (temp == null)
                     index = listBox.Items.Count - 1;
@@ -157,19 +153,49 @@ namespace MONITOR_APP.VIEW
                     index = listBox.Items.IndexOf(item);
 
 
-                var something = vm.Vms[indexDrag];
+                vm.Vms.Remove(content);
+                ChartData newData = new ChartData(content);
+                vm.Vms.Insert(index, newData);
 
-                vm.Vms.Remove(something);
-                if (index < indexDrag) indexDrag--;
-
-                vm.Vms.Insert(index, something);
-
+                //vm.ChartRedraw(newData);
 
                 indexDrag = -1;
                 isDrag = false;
             }
         }
 
+        // 리스트 박스 자체 왼쪽 클릭
+        private void ListBox_LeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            /*if (isDrag == false)
+            {
+                ListBoxItem listboxitem = FindAncestor<ListBoxItem>
+                                                  ((DependencyObject)e.OriginalSource);
+                if (listboxitem == null) return;
+
+                ChartData content = (ChartData)(listboxitem.Content);
+
+                content.selected = content.selected ? false : true;
+
+                int index = vm.Vms.IndexOf(content);
+
+                ChartData newData = new ChartData() ;
+                vm.Vms.Move(index, index);
+
+
+                //vm.Vms.Remove(content);
+                //vm.Vms.Insert(index, newData);
+
+                newData.HardCopy(content);
+                vm.ChartRedraw(content);
+
+                listboxitem.DataContext = null;
+                listboxitem.DataContext = content ;
+
+            }*/
+        }
+
+        // 리스트 박스위에서 이벤트가 발생했을때 해당 요소를 찾는 함수
         private static T FindAncestor<T>(DependencyObject obj)
             where T : DependencyObject
         {
@@ -185,15 +211,15 @@ namespace MONITOR_APP.VIEW
             return null;
         }
 
-
-
-
-
         #endregion
 
-        private void Check_Event(object sender, EventArgs e)
+        // 리스트 박스, 디테일 창 내 체크박스 이벤트
+        private void Checked_Graph(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("goood");
+            var c = e.OriginalSource as CheckBox;
+            var datacontext = c?.DataContext as ChartData;
+
+            vm.ChartRedraw(datacontext);
         }
     }
 }
