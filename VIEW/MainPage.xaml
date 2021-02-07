@@ -99,7 +99,7 @@
 
                             </live:CartesianChart>
                             <Grid Visibility="{Binding selected, Converter={StaticResource converter}}" 
-                                  Background="#FF282c37" Height="60" >
+                                  Background="#FF282c37" Height="60" x:Name="Grid_detail" >
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>

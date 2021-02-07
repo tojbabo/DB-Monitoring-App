@@ -56,7 +56,7 @@
 
 
             <Button Grid.Column="0" Height="auto" Background="{x:Null}" BorderBrush="{x:Null}" Click="Button_Main" HorizontalAlignment="Left">
-                <Image Source="/MONITOR_APP;component/Resources/HanSung remove.png" Margin="0" />
+                <Image Source="/MONITOR_APP;component/Resources/zips_remove.png" Margin="0" />
             </Button>
 
 

@@ -85,27 +85,13 @@ namespace MONITOR_APP.VIEW
         // 리스트 박스 단순 왼쪽 클릭 - 리스트 박스 요소가 아닌 그래프를 클릭해야 반응
         private void ListBox_LeftClick(object sender, MouseButtonEventArgs e)
         {
-            /*var temp = FindAncestor<ListBoxItem>
+            var temp = FindAncestor<ListBoxItem>
                 ((DependencyObject)(listBox.InputHitTest(e.GetPosition(listBox))));
             if (temp != null)
-                isDrag = true;*/
+                isDrag = true;
 
-            ListBoxItem listboxitem = FindAncestor<ListBoxItem>
-                                              ((DependencyObject)e.OriginalSource);
-            if (listboxitem == null) return;
 
-            ChartData content = (ChartData)(listboxitem.Content);
-            content.selected = content.selected ? false : true;
-            int index = vm.Vms.IndexOf(content);
-
-            Console.WriteLine("hoi");
-
-            /*vm.Vms.Remove(content);
-            vm.Vms.Insert(index, content);*/
-
-            content.ReFresh();
-
-            //vm.ChartRedraw(content);
+            
         }
         
         // 리스트 박스 위에서 마우스 움직임 감지
@@ -145,6 +131,8 @@ namespace MONITOR_APP.VIEW
                 var temp = FindAncestor<ListBoxItem>
                                 ((DependencyObject)(listBox.InputHitTest(e.GetPosition(listBox))));
 
+                
+
                 ChartData item = (ChartData)temp?.DataContext;
 
                 if (temp == null)
@@ -154,9 +142,9 @@ namespace MONITOR_APP.VIEW
 
 
                 vm.Vms.Remove(content);
-                ChartData newData = new ChartData(content);
-                vm.Vms.Insert(index, newData);
-
+                //ChartData newData = new ChartData(content);
+                //vm.Vms.Insert(index, newData);
+                vm.Vms.Insert(index, content);
                 //vm.ChartRedraw(newData);
 
                 indexDrag = -1;
@@ -167,7 +155,7 @@ namespace MONITOR_APP.VIEW
         // 리스트 박스 자체 왼쪽 클릭
         private void ListBox_LeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            /*if (isDrag == false)
+            if (isDrag == true)
             {
                 ListBoxItem listboxitem = FindAncestor<ListBoxItem>
                                                   ((DependencyObject)e.OriginalSource);
@@ -179,20 +167,15 @@ namespace MONITOR_APP.VIEW
 
                 int index = vm.Vms.IndexOf(content);
 
-                ChartData newData = new ChartData() ;
-                vm.Vms.Move(index, index);
+                //vm.Vms.Move(index, index);
 
 
-                //vm.Vms.Remove(content);
-                //vm.Vms.Insert(index, newData);
+                vm.Vms.Remove(content);
+                vm.Vms.Insert(index, content);
 
-                newData.HardCopy(content);
-                vm.ChartRedraw(content);
-
-                listboxitem.DataContext = null;
-                listboxitem.DataContext = content ;
-
-            }*/
+                //newData.HardCopy(content);
+                //vm.ChartRedraw(content);
+            }
         }
 
         // 리스트 박스위에서 이벤트가 발생했을때 해당 요소를 찾는 함수
