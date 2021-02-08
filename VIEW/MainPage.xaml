@@ -22,8 +22,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        
-        <Grid Grid.Column="0" Background="#FF9baec8" Name="Grid_side" Height="auto">
+
+        <Grid Grid.Column="0" Background="#383A3F" Name="Grid_side" Height="auto">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -36,15 +36,18 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="설정" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="30" Foreground="#FFd9e1e8" FontStyle="Normal"></TextBlock>
-            <Separator Grid.Row="0" VerticalAlignment="Bottom" Margin="5" Background="#FFd9e1e8"></Separator>
-            <Button Grid.Row="1" FontSize="20" Click="Button_ADD" Content="Add"  HorizontalContentAlignment="Right"  Width="auto" Height="Auto" Foreground="#FFd9e1e8" Background="{x:Null}" BorderBrush="{x:Null}"/>
-            <Button Grid.Row="2" FontSize="20" Click="Button_SEARCH" Content="Search"  HorizontalContentAlignment="Right"  Width="auto"  Height="Auto" Foreground="#FFd9e1e8" Background="{x:Null}" BorderBrush="{x:Null}"/>
-            <Button Grid.Row="3" FontSize="20" Click="Button_CLEAR" Content="CLEAR" Foreground="#FF282c37" Height="Auto" Background="#FFd9e1e8" BorderBrush="{x:Null}"/>
+            <TextBlock Grid.Row="0" Text="설정" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="30" Foreground="#F6B352" FontStyle="Normal"></TextBlock>
+            <Separator Grid.Row="0" VerticalAlignment="Bottom" Margin="5" Background="#F6B352"></Separator>
+            <Button Grid.Row="1" FontSize="20" Click="Button_ADD" Content="Add"  HorizontalContentAlignment="Right"  
+                    Width="auto" Height="Auto" Foreground="#F6B352" Background="{x:Null}" BorderBrush="{x:Null}"/>
+            <Button Grid.Row="2" FontSize="20" Click="Button_SEARCH" Content="Search"  HorizontalContentAlignment="Right"  
+                    Width="auto"  Height="Auto" Foreground="#F6B352" Background="{x:Null}" BorderBrush="{x:Null}"/>
+            <Button Grid.Row="3" FontSize="20" Click="Button_CLEAR" Content="CLEAR" HorizontalContentAlignment="Right"  
+                    Width="auto"  Height="Auto" Foreground="#F6B352" Background="{x:Null}" BorderBrush="{x:Null}"/>
 
         </Grid>
-        
-        <Grid Grid.Column="1" Width="280" Background="#FFd9e1e8" x:Name="Grid_search" Visibility="Collapsed">
+
+        <Grid Grid.Column="1" Width="280" Background="#F6B352" x:Name="Grid_search" Visibility="Collapsed">
             <ListView Name="listview" ItemsSource="{Binding Searches}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
                       MouseDoubleClick="ListView_DoubleClick">
                 <ListView.View>
@@ -86,6 +89,7 @@
                         <StackPanel>
                             <live:CartesianChart Height="300"  
                                           LegendLocation="Top"  MouseDown="ListBox_LeftClick" 
+                                                 MouseRightButtonDown="ListBox_RightButtonDown"
                                                  AxisY="{Binding AxisYCollection}" Series="{Binding series}" >
 
                                 <live:CartesianChart.AxisX>
@@ -99,7 +103,7 @@
 
                             </live:CartesianChart>
                             <Grid Visibility="{Binding selected, Converter={StaticResource converter}}" 
-                                  Background="#FF282c37" Height="60" x:Name="Grid_detail" >
+                                  Background="#383A3F" Height="80" x:Name="Grid_detail" Margin="20,0,20,0" >
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
@@ -114,16 +118,23 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Column="0" Text="단지번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding searches.danji }" VerticalAlignment="Center" Foreground="#FFd9e1e8"/>
-                                    <TextBlock Grid.Column="2" Text="건물번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0"/>
-                                    <TextBlock Grid.Column="3" Text="{Binding searches.build }" VerticalAlignment="Center" Foreground="#FFd9e1e8"/>
-                                    <TextBlock Grid.Column="4" Text="집 번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0"/>
-                                    <TextBlock Grid.Column="5" Text="{Binding searches.house }" VerticalAlignment="Center" Foreground="#FFd9e1e8"/>
-                                    <TextBlock Grid.Column="6" Text="방 번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0"/>
-                                    <TextBlock Grid.Column="7" Text="{Binding searches.room }" VerticalAlignment="Center" Foreground="#FFd9e1e8"/>
+                                    <TextBlock Grid.Column="0" Text="단지번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="30,0,0,0" FontSize="15"/>
+                                    <TextBlock Grid.Column="2" Text="건물번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="30,0,0,0" FontSize="15"/>
+                                    <TextBlock Grid.Column="4" Text="집 번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="30,0,0,0" FontSize="15"/>
+                                    <TextBlock Grid.Column="6" Text="방 번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="30,0,0,0" FontSize="15"/>
+
+                                    <TextBlock Grid.Column="1" Text="{Binding searches.danji }" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#F6B352" FontSize="15"/>
+                                    <TextBlock Grid.Column="3" Text="{Binding searches.build }" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#F6B352" FontSize="15"/>
+                                    <TextBlock Grid.Column="5" Text="{Binding searches.house }" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#F6B352" FontSize="15"/>
+                                    <TextBlock Grid.Column="7" Text="{Binding searches.room }" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#F6B352" FontSize="15"/>
 
                                 </Grid>
                                 <Grid Grid.Row="1">
@@ -138,9 +149,12 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <CheckBox Grid.Column="0" Content="현재 온도" Foreground="#FFd9e1e8" IsChecked="{Binding searches.tmp_cur}" Checked="Checked_Graph" Unchecked="Checked_Graph"/>
-                                    <CheckBox Grid.Column="1" Content="목표 온도" Foreground="#FFd9e1e8" IsChecked="{Binding searches.tmp_set}" Checked="Checked_Graph" Unchecked="Checked_Graph"/>
-                                    <CheckBox Grid.Column="2" Content="기기 ON/OFF" Foreground="#FFd9e1e8" IsChecked="{Binding searches.on_off}" Checked="Checked_Graph" Unchecked="Checked_Graph"/>
+                                    <CheckBox Grid.Column="0" Content="현재 온도" Foreground="#FFd9e1e8" IsChecked="{Binding searches.tmp_cur}" 
+                                              Checked="Checked_Graph" Unchecked="Checked_Graph" Background="#F6B352" Margin="30,0,0,0" FontSize="15"/>
+                                    <CheckBox Grid.Column="1" Content="목표 온도" Foreground="#FFd9e1e8" IsChecked="{Binding searches.tmp_set}" 
+                                              Checked="Checked_Graph" Unchecked="Checked_Graph" Background="#F6B352" Margin="30,0,0,0" FontSize="15"/>
+                                    <CheckBox Grid.Column="2" Content="기기 ON/OFF" Foreground="#FFd9e1e8" IsChecked="{Binding searches.on_off}" 
+                                              Checked="Checked_Graph" Unchecked="Checked_Graph" Background="#F6B352" Margin="30,0,0,0" FontSize="15"/>
 
 
 

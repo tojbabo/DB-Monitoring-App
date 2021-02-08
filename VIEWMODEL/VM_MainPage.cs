@@ -21,7 +21,9 @@ namespace MONITOR_APP.VIEWMODEL
 
         public ObservableCollection<SearchData> Searches { get; set; }
         public ObservableCollection<ChartData> Vms { get; set; }
-        //public ChartValues<CustomVm> cs { get; set; }
+
+        public double min = 0;
+        public double max = 0;
 
         public VM_MainPage()
         {
@@ -29,8 +31,6 @@ namespace MONITOR_APP.VIEWMODEL
             Vms = new ObservableCollection<ChartData>();
             Searches = new ObservableCollection<SearchData>();
             SOW = null;
-
-
         }
 
         #region chart
@@ -55,9 +55,25 @@ namespace MONITOR_APP.VIEWMODEL
             }));
 
             DataTable dt = GetDataTable(options);
+
+            if (dt.Rows.Count == 0)
+            {
+                MessageBox.Show("데이터를 찾을 수 없습니다.");
+                Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                {
+                    Vms.Remove(chart);
+                }));
+                return;
+            }
+
+
             ChartValues<double> set_temp = new ChartValues<double>();
             ChartValues<double> cur_temp = new ChartValues<double>();
             ChartValues<double> data_onoff = new ChartValues<double>();
+            double set;
+            double cur;
+            double onoff;
+            string time;
             #endregion
 
             #region 데이터 저장부
@@ -65,51 +81,23 @@ namespace MONITOR_APP.VIEWMODEL
             {
                 foreach (DataRow r in dt.Rows)
                 {
-                    set_temp.Add(Convert.ToDouble(r["SET_TEMP"].ToString()) / 10);
-                    cur_temp.Add(Convert.ToDouble(r["CUR_TEMP"].ToString()) / 10);
-                    data_onoff.Add((bool)r["OP_ONOFF"] ? 1 : 0);
+                    try
+                    {
+                        set = Convert.ToDouble(r["SET_TEMP"].ToString()) / 10;
+                        cur = Convert.ToDouble(r["CUR_TEMP"].ToString()) / 10;
+                        onoff = (bool)r["VALVE_STATUS"] ? 1 : 0;
+                        time = TimeConverter.GetTime(r["TIME"].ToString());
+                    }
+                    catch(Exception e)
+                    {
+                        continue;
+                    }
+
+
+                    chart.set_tmp.Add(Convert.ToDouble(r["SET_TEMP"].ToString()) / 10);
+                    chart.cur_tmp.Add(Convert.ToDouble(r["CUR_TEMP"].ToString()) / 10);
+                    chart.onff.Add((bool)r["OP_ONOFF"] ? 1 : 0);
                     chart.Labels.Add(TimeConverter.GetTime(r["TIME"].ToString()));
-                }
-
-
-                if (cur_temp.Count != 0)
-                {
-                    chart.AxisYCollection.Add(new LiveCharts.Wpf.Axis { Title = "temporature", Foreground = Brushes.Blue, MinValue = -5, MaxValue = 35 });
-                    chart.series.Add(new LineSeries
-                    {
-                        Title = "Current Temp",
-                        Values = cur_temp,
-                        LineSmoothness = 0, //0: straight lines, 1: really smooth lines
-                        PointGeometry = null,
-                        ScalesYAt = 0,
-                    });
-                }
-
-                if (set_temp.Count != 0)
-                {
-                    if (chart.AxisYCollection.Count == 0)
-                        chart.AxisYCollection.Add(new LiveCharts.Wpf.Axis { Title = "temporature", Foreground = Brushes.Blue, MinValue = -5, MaxValue = 35 });
-                    chart.series.Add(new LineSeries
-                    {
-                        Title = "Setting Temp",
-                        Values = set_temp,
-                        LineSmoothness = 0, //0: straight lines, 1: really smooth lines
-                        PointGeometry = null,
-                        ScalesYAt = 0,
-                    });
-                }
-
-                if (data_onoff.Count != 0)
-                {
-                    chart.AxisYCollection.Add(new LiveCharts.Wpf.Axis { Title = "on/off", Foreground = Brushes.Gold, MinValue = -1, MaxValue = 10 });
-                    chart.series.Add(new LineSeries
-                    {
-                        Title = "ON / OFF",
-                        Values = data_onoff,
-                        LineSmoothness = 1, //0: straight lines, 1: really smooth lines
-                        PointGeometry = null,
-                        ScalesYAt = 1,
-                    });
                 }
 
                 chart.title = $"{danji} - {build} - {house} - {room}";
@@ -126,24 +114,16 @@ namespace MONITOR_APP.VIEWMODEL
                     on_off = onff
                 };
 
-                ChartRedraw(chart);
+                //ChartRedraw(chart);
+                chart.Drawing();
             }));
+
             #endregion
         }
         // 생성된 모든 CHART를 지우는 함수
         public void ChartReset()
         {
             Vms.Clear();
-        }
-        // 선택 옵션에 따라 그래프 출력을 변경하는 함수
-        public void ChartRedraw(ChartData chart)
-        {
-            foreach (LineSeries d in chart.series)
-            {
-                if (d.Title == "Current Temp") d.Visibility = (chart.searches.tmp_cur == true) ? Visibility.Visible : Visibility.Hidden;
-                else if (d.Title == "Setting Temp") d.Visibility = (chart.searches.tmp_set == true) ? Visibility.Visible : Visibility.Hidden;
-                else if (d.Title == "ON / OFF") d.Visibility = (chart.searches.on_off == true) ? Visibility.Visible : Visibility.Hidden;
-            }
         }
 
         #endregion
@@ -178,13 +158,21 @@ namespace MONITOR_APP.VIEWMODEL
                 }
             }));
 
+            min = 1606271503-1;
+
+            table = MySQL.SelectTable(conn, "SELECT TIME FROM sensor_data ORDER BY ID DESC LIMIT 1;");
+            if (table == null) return;
+
+            max = Convert.ToDouble(table.Rows[0]["TIME"].ToString())-1;
+
         }
         // 검색 조건 설정 윈도우 생성
         public void RequestSelect(string opts = null)
         {
+            string time = $"{min}\\{max}";
             if (SOW == null)
             {
-                SOW = new SelectOptWindow();
+                SOW = new SelectOptWindow(time);
 
                 SOW.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 SOW.Topmost = true;
@@ -197,9 +185,10 @@ namespace MONITOR_APP.VIEWMODEL
                 SOW.Focus();
             }
 
-            if (opts != null) SOW.SetData(opts);
-                
             
+            if (opts != null) SOW.SetData(opts);
+
+
         }
         // 검색 조건 설정 윈도우 응답 함수
         void SOW_OnChildTextInputEvent(string Parameters)
@@ -226,7 +215,7 @@ namespace MONITOR_APP.VIEWMODEL
         {
             var conn = head.getConnect();
 
-            DataTable dt = MySQL.SelectTable(conn,MySQL.MakeQuery(opts));
+            DataTable dt = MySQL.SelectTable(conn, MySQL.MakeQuery(opts));
 
             if (dt == null) MessageBox.Show("data table is null");
 
@@ -234,6 +223,6 @@ namespace MONITOR_APP.VIEWMODEL
 
         }
         #endregion
-        
+
     }
 }

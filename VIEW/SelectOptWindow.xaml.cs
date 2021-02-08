@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MONITOR_APP.UTILITY;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,75 @@ namespace MONITOR_APP.VIEW
     /// </summary>
     public partial class SelectOptWindow : Window
     {
-        public SelectOptWindow()
+
+        List<ComboBoxItem> monthlist;
+        List<ComboBoxItem> daylist;
+        List<ComboBoxItem> hourlist;
+        List<ComboBoxItem> minutelist;
+        public SelectOptWindow(string time)
         {
             InitializeComponent();
+
+            string[] opts = time.Split('\\');
+            double min = Convert.ToDouble(opts[0]);
+            double max = Convert.ToDouble(opts[1]);
+
+
+            monthlist = new List<ComboBoxItem>();
+            daylist = new List<ComboBoxItem>();
+            hourlist = new List<ComboBoxItem>();
+            minutelist = new List<ComboBoxItem>();
+
+            for (int i =0; i < 60; i++)
+            {
+                if (i < 12)
+                    monthlist.Add(new ComboBoxItem()
+                    {
+                        Content = $"{i + 1}",
+
+                    });
+                if(i <24)
+                    hourlist.Add(new ComboBoxItem()
+                    {
+                        Content = $"{i + 1}",
+
+                    });
+                if(i<30)
+                    daylist.Add(new ComboBoxItem()
+                    {
+                        Content = $"{i + 1}",
+
+                    });
+
+                minutelist.Add(new ComboBoxItem()
+                {
+                    Content = $"{i + 1}",
+
+                });
+            }
+
+            month.ItemsSource = monthlist;
+            monthto.ItemsSource = monthlist;
+            day.ItemsSource = daylist;
+            dayto.ItemsSource = daylist;
+            hour.ItemsSource = hourlist;
+            hourto.ItemsSource = hourlist;
+            minute.ItemsSource = minutelist;
+            minuteto.ItemsSource = minutelist;
+
+            var t1 = TimeConverter.ConvertTimestamp(min);
+            month.SelectedIndex = t1.Month-1;
+            day.SelectedIndex = t1.Day-1;
+            hour.SelectedIndex = t1.Hour-1;
+            minute.SelectedIndex = t1.Minute-1;
+
+
+            t1 = TimeConverter.ConvertTimestamp(max);
+            monthto.SelectedIndex = t1.Month - 1;
+            dayto.SelectedIndex = t1.Day - 1;
+            hourto.SelectedIndex = t1.Hour - 1;
+            minuteto.SelectedIndex = t1.Minute - 1;
+
         }
 
         public delegate void OnChildTextInputHandler(string Parameter);
@@ -37,7 +104,7 @@ namespace MONITOR_APP.VIEW
             string build = ID_BUILD.Text;
             string house = ID_HOUSE.Text;
             string room = ID_ROOM.Text;
-
+            
 
             string a = $"{table}\\{danji}\\{build}\\{house}\\{room}\\{CURTMP.IsChecked}\\{SETTMP.IsChecked}\\{ONFF.IsChecked}";
 
@@ -51,14 +118,6 @@ namespace MONITOR_APP.VIEW
         private void GridMouseDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
-        }
-        private void DoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed && e.ClickCount == 2)
-            {
-                this.WindowState = (this.WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
-            }
-
         }
         public void SetData(string datas)
         {

@@ -12,10 +12,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="10*"/>
+            <RowDefinition Height="11*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Background="#FF282c37" MouseLeftButtonDown="GridMouseDown" Grid.ColumnSpan="2">
+        <Grid Grid.Row="0" Background="#1F2124" MouseLeftButtonDown="GridMouseDown" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -37,7 +37,7 @@
                 <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
                         Width="25" Height="25" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}"
                         Click="Button_EXIT">
-                    <materialDesign:PackIcon Kind="Power"/>
+                    <materialDesign:PackIcon Kind="Close"/>
                 </Button>
             </StackPanel>
 
@@ -45,17 +45,17 @@
 
 
 
-        <Grid Grid.Row="1" Background="#FF9baec8">
+        <Grid Grid.Row="1" Background="#383A3F">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="220*"/>
-                <ColumnDefinition Width="223*"/>
-                <ColumnDefinition Width="437*"/>
-                <ColumnDefinition Width="110*"/>
-                <ColumnDefinition Width="110*"/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
 
 
-            <Button Grid.Column="0" Height="auto" Background="{x:Null}" BorderBrush="{x:Null}" Click="Button_Main" HorizontalAlignment="Left">
+            <Button Grid.Column="0" Height="auto" Background="{x:Null}" BorderBrush="{x:Null}" Click="Button_Main" HorizontalAlignment="Stretch">
                 <Image Source="/MONITOR_APP;component/Resources/zips_remove.png" Margin="0" />
             </Button>
 
@@ -69,6 +69,8 @@
 
 
         </Grid>
+        
+        
         <Frame Grid.Row="2" Name="Page" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

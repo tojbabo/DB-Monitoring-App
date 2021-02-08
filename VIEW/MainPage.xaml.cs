@@ -71,10 +71,22 @@ namespace MONITOR_APP.VIEW
         private void ListView_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             var item = (SearchData)listview.SelectedItem;
+
+            if (item == null) return;
+
             string opt = $"{item.danji}\\{item.build}\\{item.house}\\{item.room}";
             vm.RequestSelect(opt);
         }
+        private void ListBox_RightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ListBoxItem listboxitem = FindAncestor<ListBoxItem>
+                                              ((DependencyObject)e.OriginalSource);
+            if (listboxitem == null) return;
 
+            ChartData content = (ChartData)(listboxitem.Content);
+
+            vm.Vms.Remove(content);
+        }
         #endregion
 
         #region  drag & drop
@@ -89,9 +101,6 @@ namespace MONITOR_APP.VIEW
                 ((DependencyObject)(listBox.InputHitTest(e.GetPosition(listBox))));
             if (temp != null)
                 isDrag = true;
-
-
-            
         }
         
         // 리스트 박스 위에서 마우스 움직임 감지
@@ -140,12 +149,9 @@ namespace MONITOR_APP.VIEW
                 else
                     index = listBox.Items.IndexOf(item);
 
+                vm.Vms.Move(indexDrag, index);
 
-                vm.Vms.Remove(content);
-                //ChartData newData = new ChartData(content);
-                //vm.Vms.Insert(index, newData);
-                vm.Vms.Insert(index, content);
-                //vm.ChartRedraw(newData);
+                content.ReFresh();
 
                 indexDrag = -1;
                 isDrag = false;
@@ -167,14 +173,10 @@ namespace MONITOR_APP.VIEW
 
                 int index = vm.Vms.IndexOf(content);
 
-                //vm.Vms.Move(index, index);
-
-
                 vm.Vms.Remove(content);
                 vm.Vms.Insert(index, content);
 
-                //newData.HardCopy(content);
-                //vm.ChartRedraw(content);
+                content.ReFresh();
             }
         }
 
@@ -202,7 +204,7 @@ namespace MONITOR_APP.VIEW
             var c = e.OriginalSource as CheckBox;
             var datacontext = c?.DataContext as ChartData;
 
-            vm.ChartRedraw(datacontext);
+            datacontext.ReFresh();
         }
     }
 }

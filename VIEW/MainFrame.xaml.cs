@@ -55,7 +55,10 @@ namespace MONITOR_APP.VIEW
 
         private void Button_DBConn(object sender, RoutedEventArgs e)
         {
-            head.newConnect("52.79.127.111", "3306", "hansung_db", "hansung", "aidb4231@");
+            DBConnectWindow DBC = new DBConnectWindow(head);
+            DBC.Show();
+
+            //head.newConnect("52.79.127.111", "3306", "hansung_db", "hansung", "aidb4231@");
         }
 
 
@@ -76,7 +79,6 @@ namespace MONITOR_APP.VIEW
             }
 
         }
-
         private void Button_Main(object sender, RoutedEventArgs e)
         {
             mp.GridTurnOnOff();

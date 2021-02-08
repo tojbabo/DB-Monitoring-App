@@ -11,6 +11,7 @@ namespace MONITOR_APP.UTILITY
 {
     static public class MySQL
     {
+        static private double minTime = 1606271503;
         static public void Connect()
         {
             try
@@ -157,7 +158,7 @@ namespace MONITOR_APP.UTILITY
             if (house != "") house = $" AND HOUSE_ID = '{house}'" ;
             if (room != "") room = $" AND ROOM_ID = '{room}'";
 
-            query = query + danji + build + house + room + " limit 100;";
+            query = query + danji + build + house + room + " limit 500;";
 
             return query;
         }
@@ -167,7 +168,7 @@ namespace MONITOR_APP.UTILITY
             //string query = $"SELECT DISTINCT DANJI_ID, BUILD_ID, HOUSE_ID, ROOM_ID FROM {table};";
             string query = $"SELECT DANJI_ID, BUILD_ID, HOUSE_ID, ROOM_ID, COUNT(*) " +
                 $"FROM {table} " +
-                $"WHERE DANJI_ID='2323' AND BUILD_ID='202' " +
+                $"WHERE DANJI_ID='2323' AND BUILD_ID='202' AND TIME > {minTime} " +
                 $"GROUP BY DANJI_ID,BUILD_ID,HOUSE_ID,ROOM_ID";
             return query;
         }

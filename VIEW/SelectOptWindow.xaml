@@ -12,39 +12,34 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="4*"/>
             <RowDefinition Height="4*"/>
+            <RowDefinition Height="4*"/>
             <RowDefinition Height="1.5*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="1" Background="#FF282c37" MouseLeftButtonDown="GridMouseDown" Grid.ColumnSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock MouseDown="DoubleClick" Grid.Column="0"></TextBlock>
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0" Grid.Column="1">
+        <Grid Grid.Row="0" Background="#1F2124" MouseLeftButtonDown="GridMouseDown">
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0" >
                 <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
                         Width="25" Height="25" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}"
                         Click="Close">
-                    <materialDesign:PackIcon Kind="Power"/>
+                    <materialDesign:PackIcon Kind="Close"/>
                 </Button>
             </StackPanel>
 
         </Grid>
 
-        <Grid Grid.Row="1" Background="#FF9baec8">
+        <Grid Grid.Row="1" Background="#383A3F">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="DB Table : " Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBox Text="sensor_data" x:Name="TABLE" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" IsEnabled="False" Margin="10,0,30,0"/>
+            <TextBlock Text="DB Table : " Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="13"/>
+            <TextBox Text="sensor_data" x:Name="TABLE" Grid.Column="1" HorizontalAlignment="Stretch"
+                     VerticalAlignment="Center" IsEnabled="False" Margin="10,0,30,0" Foreground="White" FontSize="13"/>
         </Grid>
-        <Separator Grid.Row="0" VerticalAlignment="Bottom"/>
 
-        <Grid Grid.Row="2" Background="#FFd9e1e8">
+        <Grid Grid.Row="2" Background="#F6B352">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -57,21 +52,20 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Input" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0" FontSize="20"/>
+            <TextBlock Text="검색 조건" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0" FontSize="18" Grid.ColumnSpan="2" Width="95" Foreground="White"/>
 
-            <TextBlock Text="DANJI ID : " Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="14,13,13,13" />
-            <TextBox Text="" Grid.Column="1" x:Name="ID_DANJI" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10,10,10,9" />
-            <TextBlock Text="BUILD ID : " Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="13" />
-            <TextBox Text="" Grid.Column="4" x:Name="ID_BUILD" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="1,10,10,9" />
-            <TextBlock Text="HOUSE ID : " Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="11,13,10,13" />
-            <TextBox Text="" Grid.Column="1" x:Name="ID_HOUSE" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="10,10,10,9" />
-            <TextBlock Text="ROOM ID : " Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="11,13" />
-            <TextBox Text="" Grid.Column="4" x:Name="ID_ROOM" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"   Margin="1,10,10,9" />
+            <TextBlock Text="단지번호 : " Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="13" />
+            <TextBox Text="" Grid.Column="1" x:Name="ID_DANJI" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"  Margin="0,10,15,10" FontSize="13" />
+            <TextBlock Text="건물번호 : " Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13" />
+            <TextBox Text="" Grid.Column="4" x:Name="ID_BUILD" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,10,15,10" FontSize="13" />
+            <TextBlock Text="집  번호 : " Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="13" />
+            <TextBox Text="" Grid.Column="1" x:Name="ID_HOUSE" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,10,15,10" FontSize="13" />
+            <TextBlock Text="방  번호 : " Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="13" />
+            <TextBox Text="" Grid.Column="4" x:Name="ID_ROOM" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,10,15,10" FontSize="13" />
         </Grid>
-        <Separator Grid.Row="1" VerticalAlignment="Bottom"/>
 
 
-        <Grid Grid.Row="3" Background="#FFd9e1e8" >
+        <Grid Grid.Row="3" Background="#F6B352" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -81,23 +75,53 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="output" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="20" Margin="10,10,0,0"/>
-            <CheckBox x:Name="ONFF" Content="OP ONOFF" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center"  VerticalAlignment="Center"  Width="110" IsChecked="True"/>
-            <CheckBox x:Name="CURTMP" Content="CUR TMP" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center"  VerticalAlignment="Center"  Width="110" IsChecked="True"/>
-            <CheckBox x:Name="SETTMP" Content="SET TMP" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="110" IsChecked="True"/>
+            <TextBlock Text="그래프 출력" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="18" Foreground="White" Margin="10,10,0,0"/>
+            <CheckBox x:Name="CURTMP" Content="현재 온도" Grid.Row="1" Grid.Column="0" FontSize="13"
+                      HorizontalAlignment="Center"  VerticalAlignment="Center"  Width="110" IsChecked="True" Background="#383A3F"/>
+            <CheckBox x:Name="SETTMP" Content="설정 온도" Grid.Row="1" Grid.Column="1" FontSize="13"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"  Width="110" IsChecked="True" Background="#383A3F"/>
+            <CheckBox x:Name="ONFF" Content="ON / OFF" Grid.Row="2" Grid.Column="0" FontSize="13"
+                      HorizontalAlignment="Center"  VerticalAlignment="Center"  Width="110" IsChecked="True" Background="#383A3F"/>
 
 
         </Grid>
-        <Separator Grid.Row="2" VerticalAlignment="Bottom"/>
 
 
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="4" Background="#F6B352" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <ComboBox Grid.Row="0" Grid.Column="0" Name="month" Margin="5" />
+            <ComboBox Grid.Row="0" Grid.Column="1" Name="day" Margin="5" />
+            <ComboBox Grid.Row="0" Grid.Column="2" Name="hour" Margin="5" />
+            <ComboBox Grid.Row="0" Grid.Column="3" Name="minute" Margin="5" />
+
+
+            <ComboBox Grid.Row="1" Grid.Column="0" Name="monthto" Margin="5" />
+            <ComboBox Grid.Row="1" Grid.Column="1" Name="dayto" Margin="5" />
+            <ComboBox Grid.Row="1" Grid.Column="2" Name="hourto" Margin="5" />
+            <ComboBox Grid.Row="1" Grid.Column="3" Name="minuteto" Margin="5" />
+
+
+        </Grid>
+
+        <Grid Grid.Row="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" FontSize="20" Content="OK" Click="Buton_OK"  HorizontalContentAlignment="Center"  Width="auto" Height="Auto" Background="{x:Null}" Foreground="#FF282c37"  BorderBrush="{x:Null}"/>
-            <Button Grid.Column="1" FontSize="20" Content="NO" Click="Close" HorizontalContentAlignment="Center"  Width="auto" Height="Auto" Background="{x:Null}" Foreground="#FF282c37"  BorderBrush="{x:Null}"/>
+            <Button Grid.Column="0" FontSize="20" Content="OK" Click="Buton_OK"  HorizontalContentAlignment="Center"  
+                    Width="auto" Height="Auto" Foreground="#383A3F"  BorderBrush="{x:Null}" Background="{x:Null}"/>
+            <Button Grid.Column="1" FontSize="20" Content="NO" Click="Close" HorizontalContentAlignment="Center"  
+                    Width="auto" Height="Auto" Foreground="#383A3F"  BorderBrush="{x:Null}" Background="{x:Null}"/>
         </Grid>
 
     </Grid>
