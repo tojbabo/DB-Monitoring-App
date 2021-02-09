@@ -20,9 +20,30 @@ namespace MONITOR_APP.MODEL
         public SeriesCollection series { get; set; }
         public AxesCollection AxisYCollection { get; set; }
         public List<string> Labels { get; set; }
-        public List<string> _labes { get; set; }
         public bool selected { get; set; }
         public SearchData searches { get; set; }
+
+        // 테스트 프로퍼티
+        public int amount { get; set; }
+        public long minday { get; set; }
+        public string mindaystring {
+            get
+            {
+                return $"{TimeConverter.GetDate(minday)}";
+            }
+        }
+        public long maxday { get; set; }
+        public string maxdaystring { 
+            get
+            {
+                return $"{TimeConverter.GetDate(maxday)}";
+            }
+        }
+
+        public int interval { get; set; }
+
+        
+        public int Count { get; set; }
 
         public ChartData()
         {
@@ -48,7 +69,7 @@ namespace MONITOR_APP.MODEL
         {
             if (searches.tmp_cur)
             {
-                AxisYCollection.Add(new LiveCharts.Wpf.Axis { Title = "temporature",  MinValue = -5, MaxValue = 35 });
+                //AxisYCollection.Add(new LiveCharts.Wpf.Axis { Title = "temporature",  MinValue = -5, MaxValue = 35 });
 
                 series.Add(new LineSeries
                 {
@@ -56,7 +77,7 @@ namespace MONITOR_APP.MODEL
                     Values = cur_tmp,
                     LineSmoothness = 1, //0: straight lines, 1: really smooth lines
                     PointGeometry = null,
-                    ScalesYAt = 0,
+                    //ScalesYAt = 0,
                     Fill = new SolidColorBrush(Colors.Transparent),
                     Stroke = new SolidColorBrush(Colors.Blue),
                     
@@ -65,8 +86,8 @@ namespace MONITOR_APP.MODEL
 
             if (searches.tmp_set)
             {
-                if (AxisYCollection.Count == 0)
-                    AxisYCollection.Add(new LiveCharts.Wpf.Axis { Title = "temporature", MinValue = -5, MaxValue = 35 });
+                //if (AxisYCollection.Count == 0)
+                    //AxisYCollection.Add(new LiveCharts.Wpf.Axis { Title = "temporature", MinValue = -5, MaxValue = 35 });
 
                 series.Add(new LineSeries
                 {
@@ -74,7 +95,7 @@ namespace MONITOR_APP.MODEL
                     Values = set_tmp,
                     LineSmoothness = 1, //0: straight lines, 1: really smooth lines
                     PointGeometry = null,
-                    ScalesYAt = 0,
+                   // ScalesYAt = 0,
                     Fill = new SolidColorBrush(Colors.Transparent),
                     Stroke = new SolidColorBrush(Colors.Red),
                 });
@@ -82,7 +103,7 @@ namespace MONITOR_APP.MODEL
 
             if (searches.on_off)
             {
-                AxisYCollection.Add(new LiveCharts.Wpf.Axis {Foreground = Brushes.Transparent, MinValue = -1, MaxValue = 10 });
+                //AxisYCollection.Add(new LiveCharts.Wpf.Axis {Foreground = Brushes.Transparent, MinValue = -1, MaxValue = 10 });
 
                 series.Add(new LineSeries
                 {
@@ -90,11 +111,13 @@ namespace MONITOR_APP.MODEL
                     Values = onff,
                     LineSmoothness = 0, //0: straight lines, 1: really smooth lines
                     PointGeometry = null,
-                    ScalesYAt = (AxisYCollection.Count==1)?0:1,
+                   // ScalesYAt = (AxisYCollection.Count==1)?0:1,
                     Fill = new SolidColorBrush(Color.FromArgb(120,219,255,171)),
                     Stroke = new SolidColorBrush(Colors.Green),
                 });
             }
+
+            this.Count = set_tmp.Count;
         }
     }
 }

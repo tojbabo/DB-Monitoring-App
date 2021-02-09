@@ -21,11 +21,30 @@ namespace MONITOR_APP.UTILITY
             //return the value in string format
             return ((converted.Ticks - 621355968000000000) / 1000000).ToString();
         }
+        public static string GetAll(string timestamp)
+        {
+            double d = Convert.ToDouble(timestamp);
+            var val = TimeConverter.ConvertTimestamp(d);
+            return $"{val.Year}/{val.Month}/{val.Day}[{val.Hour}:{val.Minute}:{val.Second}]";
+        }
         public static string GetTime(string timestamp)
         {
             double d = Convert.ToDouble(timestamp);
             var val = TimeConverter.ConvertTimestamp(d);
-            return $"{val.Hour}:{val.Minute}:{val.Second}";
+            return $"[{val.Hour}:{val.Minute}:{val.Second}]";
         }
+        public static string GetDate(string timestamp)
+        {
+            double d = Convert.ToDouble(timestamp);
+            var val = TimeConverter.ConvertTimestamp(d);
+            return $"{val.Year}/{val.Month}/{val.Day}";
+        }
+        public static string GetDate(double timestamp)
+        {
+            var val = TimeConverter.ConvertTimestamp(timestamp);
+            return $"{val.Year}/{val.Month}/{val.Day}";
+        }
+
+
     }
 }

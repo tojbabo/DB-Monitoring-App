@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4EDB4593-9447-4ECD-8093-2C4070E1DFFE}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>MONITOR_APP</RootNamespace>
     <AssemblyName>MONITOR_APP</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>

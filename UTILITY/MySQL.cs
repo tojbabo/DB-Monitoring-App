@@ -91,7 +91,7 @@ namespace MONITOR_APP.UTILITY
         }
 
         // Queyr Executer(Insert, Delete, Update ...)
-        static public void MySqlQueryExecuter(MySqlConnection conn,string userQuery)
+        static public void MySqlQueryExecuter(MySqlConnection conn, string userQuery)
         {
             if (DBOpen(null) == true)
             {
@@ -112,6 +112,7 @@ namespace MONITOR_APP.UTILITY
 
         static public DataTable SelectTable(MySqlConnection conn, string query)
         {
+            Console.WriteLine($"Query is : {query}");
             if (DBOpen(conn) == true)
             {
                 try
@@ -122,7 +123,7 @@ namespace MONITOR_APP.UTILITY
 
                     DataTable dt = new DataTable();
                     MySqlDataAdapter da = new MySqlDataAdapter(command);
-                    
+
                     da.Fill(dt);
 
                     DBClose(conn);
@@ -135,7 +136,7 @@ namespace MONITOR_APP.UTILITY
                     DBClose(conn);
                     return null;
                 }
-                
+
             }
             else
             {
@@ -151,14 +152,22 @@ namespace MONITOR_APP.UTILITY
             string house = opts[3];
             string room = opts[4];
 
+            string min = opts[8];
+            string max = opts[9];
+
             string query = $"SELECT * FROM {table} WHERE ID IS NOT NULL ";
 
             if (danji != "") danji = $" AND DANJI_ID = '{danji}'";
             if (build != "") build = $" AND BUILD_ID = '{build}'";
-            if (house != "") house = $" AND HOUSE_ID = '{house}'" ;
+            if (house != "") house = $" AND HOUSE_ID = '{house}'";
             if (room != "") room = $" AND ROOM_ID = '{room}'";
 
-            query = query + danji + build + house + room + " limit 500;";
+            if (min != "-1") min = $" AND TIME > {min}";
+            else min = "";
+            if (max != "-1") max = $" AND TIME < {max}";
+            else max = "";
+
+            query = query + danji + build + house + room + min + max + $" AND mod(substr(TIME,7,3),{opts[10]})<=2;";
 
             return query;
         }
@@ -172,6 +181,5 @@ namespace MONITOR_APP.UTILITY
                 $"GROUP BY DANJI_ID,BUILD_ID,HOUSE_ID,ROOM_ID";
             return query;
         }
-
     }
 }

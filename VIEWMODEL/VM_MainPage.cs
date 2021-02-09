@@ -22,9 +22,6 @@ namespace MONITOR_APP.VIEWMODEL
         public ObservableCollection<SearchData> Searches { get; set; }
         public ObservableCollection<ChartData> Vms { get; set; }
 
-        public double min = 0;
-        public double max = 0;
-
         public VM_MainPage()
         {
             head = BASE.getBASE();
@@ -46,6 +43,7 @@ namespace MONITOR_APP.VIEWMODEL
             bool curtmp = Convert.ToBoolean(options[5]);
             bool settmp = Convert.ToBoolean(options[6]);
             bool onff = Convert.ToBoolean(options[7]);
+            int amount = Convert.ToInt32(options[11]);
 
             #region 선언부
             ChartData chart = new ChartData();
@@ -55,6 +53,7 @@ namespace MONITOR_APP.VIEWMODEL
             }));
 
             DataTable dt = GetDataTable(options);
+            Console.WriteLine($"dt count is :{dt.Rows.Count}");
 
             if (dt.Rows.Count == 0)
             {
@@ -77,16 +76,19 @@ namespace MONITOR_APP.VIEWMODEL
             #endregion
 
             #region 데이터 저장부
+            int i = 0;
             Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
             {
                 foreach (DataRow r in dt.Rows)
                 {
+                    if (i == amount) break;
+                    i++;
                     try
                     {
                         set = Convert.ToDouble(r["SET_TEMP"].ToString()) / 10;
                         cur = Convert.ToDouble(r["CUR_TEMP"].ToString()) / 10;
                         onoff = (bool)r["VALVE_STATUS"] ? 1 : 0;
-                        time = TimeConverter.GetTime(r["TIME"].ToString());
+                        time = TimeConverter.GetAll(r["TIME"].ToString());
                     }
                     catch(Exception e)
                     {
@@ -94,13 +96,18 @@ namespace MONITOR_APP.VIEWMODEL
                     }
 
 
-                    chart.set_tmp.Add(Convert.ToDouble(r["SET_TEMP"].ToString()) / 10);
-                    chart.cur_tmp.Add(Convert.ToDouble(r["CUR_TEMP"].ToString()) / 10);
-                    chart.onff.Add((bool)r["OP_ONOFF"] ? 1 : 0);
-                    chart.Labels.Add(TimeConverter.GetTime(r["TIME"].ToString()));
+                    chart.set_tmp.Add(set);
+                    chart.cur_tmp.Add(cur);
+                    chart.onff.Add(onoff);
+                    chart.Labels.Add(time);
                 }
 
                 chart.title = $"{danji} - {build} - {house} - {room}";
+                chart.amount = amount;
+                chart.minday = Convert.ToInt64(options[8]);
+                chart.maxday = Convert.ToInt64(options[9]);
+                chart.interval = Convert.ToInt32(options[10]);
+
                 chart.selected = false;
                 chart.searches = new SearchData
                 {
@@ -114,7 +121,6 @@ namespace MONITOR_APP.VIEWMODEL
                     on_off = onff
                 };
 
-                //ChartRedraw(chart);
                 chart.Drawing();
             }));
 
@@ -157,36 +163,37 @@ namespace MONITOR_APP.VIEWMODEL
                     });
                 }
             }));
-
-            min = 1606271503-1;
-
-            table = MySQL.SelectTable(conn, "SELECT TIME FROM sensor_data ORDER BY ID DESC LIMIT 1;");
-            if (table == null) return;
-
-            max = Convert.ToDouble(table.Rows[0]["TIME"].ToString())-1;
-
         }
         // 검색 조건 설정 윈도우 생성
         public void RequestSelect(string opts = null)
         {
-            string time = $"{min}\\{max}";
+            double mintime;
+            double maxtime;
             if (SOW == null)
             {
-                SOW = new SelectOptWindow(time);
+                (mintime, maxtime) = Getminmax(opts);
 
+                SOW = new SelectOptWindow();
                 SOW.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 SOW.Topmost = true;
                 SOW.OnChildTextInputEvent += new SelectOptWindow.OnChildTextInputHandler(SOW_OnChildTextInputEvent);
                 SOW.Show();
-
             }
             else
             {
+                (mintime, maxtime) = Getminmax(opts);
+
                 SOW.Focus();
             }
 
             
-            if (opts != null) SOW.SetData(opts);
+            string time = $"{mintime}\\{maxtime}";
+            if (opts != null)
+            {
+                SOW.SetData($"{time}\\{opts}");
+            }
+            else
+                SOW.SetData(time);
 
 
         }
@@ -223,6 +230,42 @@ namespace MONITOR_APP.VIEWMODEL
 
         }
         #endregion
+        (double,double) Getminmax(string datas)
+        {
+            if (datas == null)
+                return (-1,-1);
+            var conn = head.getConnect();
+
+            string[] opts = datas.Split('\\');
+
+            string danji = opts[0];
+            string build = opts[1];
+            string house = opts[2];
+            string room = opts[3];
+
+            string query = $"SELECT * FROM {"sensor_data"} WHERE ID IS NOT NULL ";
+
+            if (danji != "") danji = $" AND DANJI_ID = '{danji}'";
+            if (build != "") build = $" AND BUILD_ID = '{build}'";
+            if (house != "") house = $" AND HOUSE_ID = '{house}'";
+            if (room != "") room = $" AND ROOM_ID = '{room}'";
+
+            string minquery = query + danji + build + house + room + " LIMIT 1;";
+            string maxquery = query + danji + build + house + room + " ORDER BY ID DESC LIMIT 1;";
+
+
+            var table = MySQL.SelectTable(conn, minquery);
+
+            double min = Convert.ToDouble(table.Rows[0]["TIME"].ToString());
+
+            table = MySQL.SelectTable(conn, maxquery);
+
+            double max = Convert.ToDouble(table.Rows[0]["TIME"].ToString()) + 1;
+
+
+            return (min, max);
+
+        }
 
     }
 }

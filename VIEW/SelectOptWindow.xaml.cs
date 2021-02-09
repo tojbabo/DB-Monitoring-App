@@ -20,80 +20,16 @@ namespace MONITOR_APP.VIEW
     /// </summary>
     public partial class SelectOptWindow : Window
     {
-
-        List<ComboBoxItem> monthlist;
-        List<ComboBoxItem> daylist;
-        List<ComboBoxItem> hourlist;
-        List<ComboBoxItem> minutelist;
-        public SelectOptWindow(string time)
+        public SelectOptWindow()
         {
             InitializeComponent();
-
-            string[] opts = time.Split('\\');
-            double min = Convert.ToDouble(opts[0]);
-            double max = Convert.ToDouble(opts[1]);
-
-
-            monthlist = new List<ComboBoxItem>();
-            daylist = new List<ComboBoxItem>();
-            hourlist = new List<ComboBoxItem>();
-            minutelist = new List<ComboBoxItem>();
-
-            for (int i =0; i < 60; i++)
-            {
-                if (i < 12)
-                    monthlist.Add(new ComboBoxItem()
-                    {
-                        Content = $"{i + 1}",
-
-                    });
-                if(i <24)
-                    hourlist.Add(new ComboBoxItem()
-                    {
-                        Content = $"{i + 1}",
-
-                    });
-                if(i<30)
-                    daylist.Add(new ComboBoxItem()
-                    {
-                        Content = $"{i + 1}",
-
-                    });
-
-                minutelist.Add(new ComboBoxItem()
-                {
-                    Content = $"{i + 1}",
-
-                });
-            }
-
-            month.ItemsSource = monthlist;
-            monthto.ItemsSource = monthlist;
-            day.ItemsSource = daylist;
-            dayto.ItemsSource = daylist;
-            hour.ItemsSource = hourlist;
-            hourto.ItemsSource = hourlist;
-            minute.ItemsSource = minutelist;
-            minuteto.ItemsSource = minutelist;
-
-            var t1 = TimeConverter.ConvertTimestamp(min);
-            month.SelectedIndex = t1.Month-1;
-            day.SelectedIndex = t1.Day-1;
-            hour.SelectedIndex = t1.Hour-1;
-            minute.SelectedIndex = t1.Minute-1;
-
-
-            t1 = TimeConverter.ConvertTimestamp(max);
-            monthto.SelectedIndex = t1.Month - 1;
-            dayto.SelectedIndex = t1.Day - 1;
-            hourto.SelectedIndex = t1.Hour - 1;
-            minuteto.SelectedIndex = t1.Minute - 1;
-
         }
 
         public delegate void OnChildTextInputHandler(string Parameter);
         public event OnChildTextInputHandler OnChildTextInputEvent;
 
+        private double min;
+        private double max;
 
         #region Event
 
@@ -104,9 +40,35 @@ namespace MONITOR_APP.VIEW
             string build = ID_BUILD.Text;
             string house = ID_HOUSE.Text;
             string room = ID_ROOM.Text;
-            
 
-            string a = $"{table}\\{danji}\\{build}\\{house}\\{room}\\{CURTMP.IsChecked}\\{SETTMP.IsChecked}\\{ONFF.IsChecked}";
+            long starttime = -1;
+            long endtime = -1;
+            if(startdap.SelectedDate != null)
+                starttime = ((DateTimeOffset)startdap.SelectedDate).ToUnixTimeSeconds();
+
+            if(enddatp.SelectedDate !=null)
+                endtime = ((DateTimeOffset)enddatp.SelectedDate).ToUnixTimeSeconds();
+            int interval = 3;
+
+            if (RadioA.IsChecked == true) interval = 6;
+            else if (RadioB.IsChecked == true) interval = 30;
+            else if (RadioC.IsChecked == true) interval = 60;
+            else if (RadioD.IsChecked == true) interval = 360;
+
+            // table : 0
+            // danji : 1
+            // build : 2
+            // house : 3
+            // room : 4
+            // cur_tmp : 5
+            // set_tmp : 6
+            // ONFF : 7
+            // time_start : 8
+            // time_end : 9
+            // time_interval : 10
+            // amount : 11
+
+            string a = $"{table}\\{danji}\\{build}\\{house}\\{room}\\{CURTMP.IsChecked}\\{SETTMP.IsChecked}\\{ONFF.IsChecked}\\{starttime}\\{endtime}\\{interval}\\{amount.Text}";
 
             if (OnChildTextInputEvent != null) OnChildTextInputEvent(a);
         }
@@ -122,10 +84,20 @@ namespace MONITOR_APP.VIEW
         public void SetData(string datas)
         {
             string[] opts = datas.Split('\\');
-            ID_DANJI.Text = opts[0];
-            ID_BUILD.Text = opts[1];
-            ID_HOUSE.Text = opts[2];
-            ID_ROOM.Text = opts[3];
+            if (opts.Length > 2)
+            {
+                ID_DANJI.Text = opts[2];
+                ID_BUILD.Text = opts[3];
+                ID_HOUSE.Text = opts[4];
+                ID_ROOM.Text = opts[5];
+            }
+
+            min = Convert.ToDouble(opts[0]);
+            max = Convert.ToDouble(opts[1]);
+            if (min != -1)
+                startdap.SelectedDate = TimeConverter.ConvertTimestamp(min);
+            if (max != -1)
+                enddatp.SelectedDate = TimeConverter.ConvertTimestamp(max);
         }
         #endregion
 
