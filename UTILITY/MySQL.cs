@@ -29,6 +29,7 @@ namespace MONITOR_APP.UTILITY
                 MessageBox.Show(e.Message);
             }
         }
+
         static public MySqlConnection Connect(string ip, string port, string db_name, string id, string pass)
         {
             try

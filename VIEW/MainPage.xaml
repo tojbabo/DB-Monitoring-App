@@ -87,7 +87,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <live:CartesianChart Height="300"  
+                            <live:CartesianChart Height="300"  DisableAnimations="True" Hoverable="False"
                                           LegendLocation="Top"  MouseDown="ListBox_LeftClick" 
                                                  MouseRightButtonDown="ListBox_RightButtonDown"
                                                  AxisY="{Binding AxisYCollection}" Series="{Binding series}" >
@@ -152,8 +152,15 @@
                                     <TextBlock Grid.Column="4" Text="{Binding maxdaystring}" Foreground="#FFd9e1e8" FontSize="12"
                                                VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
-                                    <TextBlock Grid.Column="5" Text="{Binding interval}" Foreground="#FFd9e1e8" FontSize="12"
-                                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <ComboBox Name="combo_interval" Grid.Column="5" FontSize="12" Foreground="#FFd9e1e8"
+                                              VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                        <ComboBoxItem Content="30초"/>
+                                        <ComboBoxItem Content="60초"/>
+                                        <ComboBoxItem Content="10분"/>
+                                        <ComboBoxItem Content="1시간"/>
+                                    </ComboBox>
+
+
 
                                 </Grid>
                             </Grid>

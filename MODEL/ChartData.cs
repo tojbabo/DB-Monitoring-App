@@ -41,9 +41,10 @@ namespace MONITOR_APP.MODEL
         }
 
         public int interval { get; set; }
-
         
         public int Count { get; set; }
+
+        #region 메서드
 
         public ChartData()
         {
@@ -105,13 +106,12 @@ namespace MONITOR_APP.MODEL
             {
                 //AxisYCollection.Add(new LiveCharts.Wpf.Axis {Foreground = Brushes.Transparent, MinValue = -1, MaxValue = 10 });
 
-                series.Add(new LineSeries
+                series.Add(new StepLineSeries
                 {
                     Title = "ON / OFF",
                     Values = onff,
-                    LineSmoothness = 0, //0: straight lines, 1: really smooth lines
-                    PointGeometry = null,
-                   // ScalesYAt = (AxisYCollection.Count==1)?0:1,
+                    PointGeometry = DefaultGeometries.Circle,
+                    PointGeometrySize = 5,
                     Fill = new SolidColorBrush(Color.FromArgb(120,219,255,171)),
                     Stroke = new SolidColorBrush(Colors.Green),
                 });
@@ -119,5 +119,7 @@ namespace MONITOR_APP.MODEL
 
             this.Count = set_tmp.Count;
         }
+
+        #endregion
     }
 }

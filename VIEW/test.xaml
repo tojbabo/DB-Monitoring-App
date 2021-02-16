@@ -1,0 +1,25 @@
+﻿<Window x:Class="MONITOR_APP.VIEW.test"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MONITOR_APP.VIEW"
+        xmlns:plots ="http://oxyplot.org/wpf"
+        mc:Ignorable="d"
+        Title="test" Height="682.5" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <plots:Plot Title="godg" Name="asdf" Grid.Row="0"> 
+            <plots:Plot.Series >
+                <plots:LineSeries ItemsSource="{Binding p}"/>
+            </plots:Plot.Series>
+        </plots:Plot>
+
+        <plots:PlotView Grid.Row="1" Model="{Binding mod}"/>
+
+
+    </Grid>
+</Window>
