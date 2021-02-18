@@ -1,8 +1,11 @@
-﻿using LiveCharts;
-using LiveCharts.Wpf;
+﻿
 using MONITOR_APP.UTILITY;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,114 +15,134 @@ namespace MONITOR_APP.MODEL
 {
     public class ChartData
     {
+        public PlotModel vm { get; set; }
+        public List<DataPoint> set { get; set; }
+        public List<DataPoint> cur { get; set; }
+        public List<DataPoint> onff { get; set; }
 
-        public ChartValues<double> set_tmp;
-        public ChartValues<double> cur_tmp;
-        public ChartValues<double> onff;
-        public string title { get; set; }
-        public SeriesCollection series { get; set; }
-        public AxesCollection AxisYCollection { get; set; }
-        public List<string> Labels { get; set; }
         public bool selected { get; set; }
         public SearchData searches { get; set; }
 
         // 테스트 프로퍼티
-        public int amount { get; set; }
-        public long minday { get; set; }
-        public string mindaystring {
+        public string minday
+        {
             get
             {
-                return $"{TimeConverter.GetDate(minday)}";
+                return $"{TimeConverter.GetDate(searches.mintime)}";
             }
         }
-        public long maxday { get; set; }
-        public string maxdaystring { 
+        public DateTime lilday
+        {
             get
             {
-                return $"{TimeConverter.GetDate(maxday)}";
+                return TimeConverter.ConvertTimestamp(searches.mintime);
+            }
+            set
+            {
+                searches.mintime = ((DateTimeOffset)value).ToUnixTimeSeconds();
+            }
+        }
+        public string maxday
+        { 
+            get
+            {
+                return $"{TimeConverter.GetDate(searches.maxtime)}";
+            }
+        }
+        public DateTime bigday
+        {
+            get
+            {
+                return TimeConverter.ConvertTimestamp(searches.maxtime);
+            }
+            set
+            {
+                searches.maxtime = ((DateTimeOffset)value).ToUnixTimeSeconds();
             }
         }
 
-        public int interval { get; set; }
-        
         public int Count { get; set; }
+
+        public bool isComboOpen = false;
+
+        public PlotController plt { get; set; }
 
         #region 메서드
 
         public ChartData()
         {
-            series = new SeriesCollection();
-            AxisYCollection = new AxesCollection();
-            Labels = new List<string>();
-            searches = new SearchData();
+            plt = new PlotController();
+            plt.UnbindAll();
 
-            set_tmp = new ChartValues<double>();
-            cur_tmp = new ChartValues<double>();
-            onff = new ChartValues<double>();
+
+            vm = new PlotModel();
+            set = new List<DataPoint>();
+            cur = new List<DataPoint>();
+            onff = new List<DataPoint>();
+            searches = new SearchData();
         }
 
         public void ReFresh()
         {
-            AxisYCollection.Clear();
-            series.Clear();
-
+            vm = new PlotModel();
             Drawing();
         }
 
         public void Drawing()
         {
-            if (searches.tmp_cur)
+            vm.Title = $"Room: {this.searches.ROOM_ID}";
+            
+
+            vm.Axes.Add(new DateTimeAxis()
             {
-                //AxisYCollection.Add(new LiveCharts.Wpf.Axis { Title = "temporature",  MinValue = -5, MaxValue = 35 });
+                
+                Position = AxisPosition.Bottom,
+                IsZoomEnabled = false,
+                IsPanEnabled = false,
 
-                series.Add(new LineSeries
-                {
-                    Title = "Current Temp",
-                    Values = cur_tmp,
-                    LineSmoothness = 1, //0: straight lines, 1: really smooth lines
-                    PointGeometry = null,
-                    //ScalesYAt = 0,
-                    Fill = new SolidColorBrush(Colors.Transparent),
-                    Stroke = new SolidColorBrush(Colors.Blue),
-                    
-                });
-            }
-
-            if (searches.tmp_set)
+                //AbsoluteMinimum = minday,
+                //AbsoluteMaximum = maxday,
+            }) ;
+            vm.Axes.Add(new LinearAxis
             {
-                //if (AxisYCollection.Count == 0)
-                    //AxisYCollection.Add(new LiveCharts.Wpf.Axis { Title = "temporature", MinValue = -5, MaxValue = 35 });
+                Position = AxisPosition.Left,
+                IsZoomEnabled = false,
+                IsPanEnabled = false,
+                Minimum = -5,
+                Maximum = 40,
+                AbsoluteMinimum = -5,
+                AbsoluteMaximum = 40,
+            }) ;
 
-                series.Add(new LineSeries
-                {
-                    Title = "Setting Temp",
-                    Values = set_tmp,
-                    LineSmoothness = 1, //0: straight lines, 1: really smooth lines
-                    PointGeometry = null,
-                   // ScalesYAt = 0,
-                    Fill = new SolidColorBrush(Colors.Transparent),
-                    Stroke = new SolidColorBrush(Colors.Red),
-                });
-            }
-
-            if (searches.on_off)
+            if(searches.tmp_set) vm.Series.Add(new StairStepSeries
             {
-                //AxisYCollection.Add(new LiveCharts.Wpf.Axis {Foreground = Brushes.Transparent, MinValue = -1, MaxValue = 10 });
-
-                series.Add(new StepLineSeries
-                {
-                    Title = "ON / OFF",
-                    Values = onff,
-                    PointGeometry = DefaultGeometries.Circle,
-                    PointGeometrySize = 5,
-                    Fill = new SolidColorBrush(Color.FromArgb(120,219,255,171)),
-                    Stroke = new SolidColorBrush(Colors.Green),
-                });
-            }
-
-            this.Count = set_tmp.Count;
+                Title = "set",
+                ItemsSource = set,
+                StrokeThickness = 2,
+                LineStyle = LineStyle.Solid,
+                Color = OxyColors.Red,
+            });
+            
+            if(searches.tmp_cur) vm.Series.Add(new StairStepSeries
+            {
+                Title = "cur",
+                ItemsSource = cur,
+                StrokeThickness = 2,
+                LineStyle = LineStyle.Solid,
+                Color = OxyColors.Black,
+            });
+            
+            if(searches.on_off) vm.Series.Add(new StairStepSeries
+            {
+                Title = "onff",
+                ItemsSource = onff,
+                StrokeThickness = 2,
+                LineStyle = LineStyle.Solid,
+                Color = OxyColors.Green,
+            });
         }
 
         #endregion
     }
+
 }

@@ -1,6 +1,4 @@
-﻿using LiveCharts;
-using LiveCharts.Wpf;
-using LiveCharts.Wpf.Charts.Base;
+﻿
 using MONITOR_APP.MODEL;
 using MONITOR_APP.UTILITY;
 using MONITOR_APP.VIEWMODEL;
@@ -31,8 +29,8 @@ namespace MONITOR_APP.VIEW
     /// </summary>
     public partial class MainPage : Page
     {
-        BASE head;
-        VM_MainPage vm;
+        readonly BASE head;
+        readonly VM_MainPage vm;
         
         public MainPage()
         {
@@ -45,11 +43,9 @@ namespace MONITOR_APP.VIEW
             Thread t = new Thread(vm.CreateSearchData);
             t.Start();
             //vm.CreateSearchData();
-
         }
         
         #region Event
-
         private void Button_ADD(object sender, RoutedEventArgs e)
         {
             vm.RequestSelect();
@@ -58,34 +54,61 @@ namespace MONITOR_APP.VIEW
         {
             vm.ChartReset();
         }
-        public void GridTurnOnOff()
-        {
-            Grid_side.Visibility = (Grid_side.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
-            Col.Width = (Grid_side.Visibility == Visibility.Visible) ? new GridLength(/*1,GridUnitType.Star*/130) : GridLength.Auto;
-        }
         private void Button_SEARCH(object sender, RoutedEventArgs e)
         {
             //vm.f();
             Grid_search.Visibility = (Grid_search.Visibility == Visibility.Visible)?Visibility.Collapsed:Visibility.Visible;
         }
+
         private void ListView_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             var item = (SearchData)listview.SelectedItem;
 
             if (item == null) return;
 
-            string opt = $"{item.danji}\\{item.build}\\{item.house}\\{item.room}";
-            vm.RequestSelect(opt);
+            string opt = $"{item.DANJI_ID}\\{item.BUILD_ID}\\{item.HOUSE_ID}\\{item.ROOM_ID}";
+            vm.RequestSelect(opt);  
         }
-        private void ListBox_RightButtonDown(object sender, MouseButtonEventArgs e)
+        private void Graph_RightDown(object sender, MouseButtonEventArgs e)
         {
             ListBoxItem listboxitem = FindAncestor<ListBoxItem>
                                               ((DependencyObject)e.OriginalSource);
+            
+            if (listboxitem == null) return;
+            try
+            {
+                ChartData content = (ChartData)(listboxitem.Content);
+            vm.Vms.Remove(content);
+            }
+            catch(Exception err)
+            {
+                //Console.WriteLine($"{err}");
+                return;
+            }
+        }
+        private void Graph_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // if (isDrag == true)
+            // {
+
+            ListBoxItem listboxitem = FindAncestor<ListBoxItem>
+                                          ((DependencyObject)e.OriginalSource);
             if (listboxitem == null) return;
 
             ChartData content = (ChartData)(listboxitem.Content);
 
+            content.selected = !content.selected;
+
+            int index = vm.Vms.IndexOf(content);
+
             vm.Vms.Remove(content);
+            content.ReFresh();
+
+            vm.Vms.Insert(index, content);
+
+
+            //content.ReFresh();
+            //  }
         }
         #endregion
 
@@ -95,7 +118,7 @@ namespace MONITOR_APP.VIEW
         private int indexDrag = -1;
 
         // 리스트 박스 단순 왼쪽 클릭 - 리스트 박스 요소가 아닌 그래프를 클릭해야 반응
-        private void ListBox_LeftClick(object sender, MouseButtonEventArgs e)
+        private void Graph_LeftDown(object sender, MouseButtonEventArgs e)
         {
             var temp = FindAncestor<ListBoxItem>
                 ((DependencyObject)(listBox.InputHitTest(e.GetPosition(listBox))));
@@ -136,7 +159,7 @@ namespace MONITOR_APP.VIEW
                 if (indexDrag == -1) return;
                     
 
-                int index = -1;
+                int index;
                 var temp = FindAncestor<ListBoxItem>
                                 ((DependencyObject)(listBox.InputHitTest(e.GetPosition(listBox))));
 
@@ -158,28 +181,6 @@ namespace MONITOR_APP.VIEW
             }
         }
 
-        // 리스트 박스 자체 왼쪽 클릭
-        private void ListBox_LeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (isDrag == true)
-            {
-                ListBoxItem listboxitem = FindAncestor<ListBoxItem>
-                                                  ((DependencyObject)e.OriginalSource);
-                if (listboxitem == null) return;
-
-                ChartData content = (ChartData)(listboxitem.Content);
-
-                content.selected = content.selected ? false : true;
-
-                int index = vm.Vms.IndexOf(content);
-
-                vm.Vms.Remove(content);
-                vm.Vms.Insert(index, content);
-
-                content.ReFresh();
-            }
-        }
-
         // 리스트 박스위에서 이벤트가 발생했을때 해당 요소를 찾는 함수
         private static T FindAncestor<T>(DependencyObject obj)
             where T : DependencyObject
@@ -198,13 +199,88 @@ namespace MONITOR_APP.VIEW
 
         #endregion
 
+        public void GridTurnOnOff()
+        {
+            Grid_side.Visibility = (Grid_side.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
+            Col.Width = (Grid_side.Visibility == Visibility.Visible) ? new GridLength(/*1,GridUnitType.Star*/130) : GridLength.Auto;
+            Grid_search.Visibility = Visibility.Collapsed;
+        }
+        // 리스트 박스 자체 왼쪽 클릭
+        private void ListBox_LeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (isDrag == true)
+            {
+                ListBoxItem listboxitem = FindAncestor<ListBoxItem>
+                                                  ((DependencyObject)e.OriginalSource);
+                if (listboxitem == null) return;
+
+                ChartData content = (ChartData)(listboxitem.Content);
+
+                content.selected = !content.selected;
+
+                int index = vm.Vms.IndexOf(content);
+
+                vm.Vms.Remove(content);
+                vm.Vms.Insert(index, content);
+
+                content.ReFresh();
+            }
+        }
         // 리스트 박스, 디테일 창 내 체크박스 이벤트
         private void Checked_Graph(object sender, RoutedEventArgs e)
         {
             var c = e.OriginalSource as CheckBox;
             var datacontext = c?.DataContext as ChartData;
+            ChartData content = (ChartData)datacontext;
 
-            datacontext.ReFresh();
+            int index = vm.Vms.IndexOf(content);
+
+            vm.Vms.Remove(content);
+            content.ReFresh();
+
+            vm.Vms.Insert(index, content);
+        }
+
+        private void Button_Expand(object sender, RoutedEventArgs e)
+        {
+            ListBoxItem listboxitem = FindAncestor<ListBoxItem>
+                                              ((DependencyObject)e.OriginalSource);
+            if (listboxitem == null) return;
+
+            ChartData content = (ChartData)(listboxitem.Content);
+            content.selected = !content.selected;
+
+            int index = vm.Vms.IndexOf(content);
+
+            vm.Vms.Remove(content);
+            content.ReFresh();
+
+            vm.Vms.Insert(index, content);
+
+        }
+
+        private void Button_Delete(object sender, RoutedEventArgs e)
+        {
+            ListBoxItem listboxitem = FindAncestor<ListBoxItem>
+                                              ((DependencyObject)e.OriginalSource);
+
+            if (listboxitem == null) return;
+
+            ChartData content = (ChartData)(listboxitem.Content);
+
+            vm.Vms.Remove(content);
+        }
+
+        private void Button_Select(object sender, MouseButtonEventArgs e)
+        {
+            if (isDrag == false) isDrag = true;
+        }
+        private void Button_Reload(object sender, RoutedEventArgs e)
+        {
+            var a = sender as Button;
+            var b = (ChartData)a.DataContext;
+
+            Console.WriteLine($"result is : {TimeConverter.GetDate( b.searches.mintime)} - {TimeConverter.GetDate( b.searches.maxtime)} - {b.searches.interval}");
         }
     }
 }

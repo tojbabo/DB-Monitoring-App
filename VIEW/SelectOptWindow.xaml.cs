@@ -1,4 +1,5 @@
-﻿using MONITOR_APP.UTILITY;
+﻿using MONITOR_APP.MODEL;
+using MONITOR_APP.UTILITY;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace MONITOR_APP.VIEW
             InitializeComponent();
         }
 
-        public delegate void OnChildTextInputHandler(string Parameter);
+        public delegate void OnChildTextInputHandler(object Parameter);
         public event OnChildTextInputHandler OnChildTextInputEvent;
 
         private double min;
@@ -35,42 +36,33 @@ namespace MONITOR_APP.VIEW
 
         private void Buton_OK(object sender, RoutedEventArgs e)
         {
-            string table = TABLE.Text;
-            string danji = ID_DANJI.Text;
-            string build = ID_BUILD.Text;
-            string house = ID_HOUSE.Text;
-            string room = ID_ROOM.Text;
+            SearchData SEARCH = new SearchData();
+            
+            SEARCH.TABLE = TABLE.Text;
+            SEARCH.DANJI_ID = ID_DANJI.Text;
+            SEARCH.BUILD_ID = ID_BUILD.Text;
+            SEARCH.HOUSE_ID = ID_HOUSE.Text;
+            SEARCH.ROOM_ID = ID_ROOM.Text;
 
-            long starttime = -1;
-            long endtime = -1;
+
             if(startdap.SelectedDate != null)
-                starttime = ((DateTimeOffset)startdap.SelectedDate).ToUnixTimeSeconds();
+                SEARCH.mintime = ((DateTimeOffset)startdap.SelectedDate).ToUnixTimeSeconds();
 
             if(enddatp.SelectedDate !=null)
-                endtime = ((DateTimeOffset)enddatp.SelectedDate).ToUnixTimeSeconds();
-            int interval = 3;
+                SEARCH.maxtime = ((DateTimeOffset)enddatp.SelectedDate).ToUnixTimeSeconds();
 
-            if (RadioA.IsChecked == true) interval = 6;
-            else if (RadioB.IsChecked == true) interval = 30;
-            else if (RadioC.IsChecked == true) interval = 60;
-            else if (RadioD.IsChecked == true) interval = 360;
+            if (RadioA.IsChecked == true) SEARCH.interval = 0;
+            else if (RadioB.IsChecked == true) SEARCH.interval = 1;
+            else if (RadioC.IsChecked == true) SEARCH.interval = 2;
+            else if (RadioD.IsChecked == true) SEARCH.interval = 3;
 
-            // table : 0
-            // danji : 1
-            // build : 2
-            // house : 3
-            // room : 4
-            // cur_tmp : 5
-            // set_tmp : 6
-            // ONFF : 7
-            // time_start : 8
-            // time_end : 9
-            // time_interval : 10
-            // amount : 11
+            SEARCH.amount = Convert.ToDouble(amount.Text);
 
-            string a = $"{table}\\{danji}\\{build}\\{house}\\{room}\\{CURTMP.IsChecked}\\{SETTMP.IsChecked}\\{ONFF.IsChecked}\\{starttime}\\{endtime}\\{interval}\\{amount.Text}";
+            SEARCH.tmp_set = (bool)SETTMP.IsChecked;
+            SEARCH.tmp_cur = (bool)CURTMP.IsChecked;
+            SEARCH.on_off = (bool)ONFF.IsChecked;
 
-            if (OnChildTextInputEvent != null) OnChildTextInputEvent(a);
+            if (OnChildTextInputEvent != null) OnChildTextInputEvent(SEARCH);
         }
         private void Close(object sender, RoutedEventArgs e)
         {

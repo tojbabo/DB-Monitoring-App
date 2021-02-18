@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using MONITOR_APP.MODEL;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,7 +10,7 @@ using System.Windows;
 
 namespace MONITOR_APP.UTILITY
 {
-    static public class MySQL
+    static public class DB_mysql
     {
         static private double minTime = 1606271503;
         static public void Connect()
@@ -145,32 +146,14 @@ namespace MONITOR_APP.UTILITY
             }
         }
 
-        static public string MakeQuery(string[] opts)
+        static public string MakeQuery(object obj)
         {
-            string table = opts[0];
-            string danji = opts[1];
-            string build = opts[2];
-            string house = opts[3];
-            string room = opts[4];
-
-            string min = opts[8];
-            string max = opts[9];
+            SearchData s = (SearchData)obj;
+            string table = s.TABLE;
 
             string query = $"SELECT * FROM {table} WHERE ID IS NOT NULL ";
 
-            if (danji != "") danji = $" AND DANJI_ID = '{danji}'";
-            if (build != "") build = $" AND BUILD_ID = '{build}'";
-            if (house != "") house = $" AND HOUSE_ID = '{house}'";
-            if (room != "") room = $" AND ROOM_ID = '{room}'";
-
-            if (min != "-1") min = $" AND TIME > {min}";
-            else min = "";
-            if (max != "-1") max = $" AND TIME < {max}";
-            else max = "";
-
-            query = query + danji + build + house + room + min + max + $" AND mod(substr(TIME,7,3),{opts[10]})<=2;";
-
-            return query;
+            return query +$"{s.make_WHERE()};";
         }
 
         static public string SearchQuery(string table)

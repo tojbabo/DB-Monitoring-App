@@ -47,7 +47,7 @@ namespace MONITOR_APP.VIEW
             }
             catch(Exception E)
             {
-                MessageBox.Show("Connectino err", E.Message);
+                MessageBox.Show("Connect err", E.Message);
                 return;
             }
 

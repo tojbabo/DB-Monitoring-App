@@ -5,7 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MONITOR_APP.VIEW"
       xmlns:util="clr-namespace:MONITOR_APP.UTILITY"
-      xmlns:live="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      xmlns:oxys="http://oxyplot.org/wpf" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage">
@@ -65,10 +66,10 @@
                             </Style>
                         </GridView.ColumnHeaderContainerStyle>
                         
-                        <GridViewColumn Header="DANJI" DisplayMemberBinding="{Binding danji}"/>
-                        <GridViewColumn Header="BUILD" DisplayMemberBinding="{Binding build}"/>
-                        <GridViewColumn Header="HOUSE" DisplayMemberBinding="{Binding house}"/>
-                        <GridViewColumn Header="ROOM" DisplayMemberBinding="{Binding room}"/>
+                        <GridViewColumn Header="DANJI" DisplayMemberBinding="{Binding DANJI_ID}"/>
+                        <GridViewColumn Header="BUILD" DisplayMemberBinding="{Binding BUILD_ID}"/>
+                        <GridViewColumn Header="HOUSE" DisplayMemberBinding="{Binding HOUSE_ID}"/>
+                        <GridViewColumn Header="ROOM" DisplayMemberBinding="{Binding ROOM_ID}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -79,31 +80,22 @@
                     HorizontalContentAlignment="Stretch"
                     ScrollViewer.CanContentScroll="False"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                    MouseLeftButtonUp="ListBox_LeftButtonUp"
                     PreviewMouseMove="ListBox_Drag"
                     Drop="ListBox_Drop"
                     AllowDrop="True" Grid.RowSpan="2">
-
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <live:CartesianChart Height="300"  DisableAnimations="True" Hoverable="False"
-                                          LegendLocation="Top"  MouseDown="ListBox_LeftClick" 
-                                                 MouseRightButtonDown="ListBox_RightButtonDown"
-                                                 AxisY="{Binding AxisYCollection}" Series="{Binding series}" >
+                            
+                            <oxys:PlotView Height="300"
+                                               Model="{Binding vm}" Controller="{Binding plt}"
+                                               MouseRightButtonDown="Graph_RightDown"
+                                               MouseDoubleClick="Graph_DoubleClick"
+                                               PreviewMouseLeftButtonDown="Graph_LeftDown" >
+                            </oxys:PlotView>
 
-                                <live:CartesianChart.AxisX>
-                                    <live:Axis   Labels="{Binding Labels}" Position="LeftBottom">
-                                        <!--     <live:Axis.Separator >
-                                        <live:Separator Step="1" /> 
-                                    </live:Axis.Separator>
-                                    -->
-                                    </live:Axis>
-                                </live:CartesianChart.AxisX>
-
-                            </live:CartesianChart>
                             <Grid Visibility="{Binding selected, Converter={StaticResource converter}}" 
-                                  Background="#383A3F" Height="80" x:Name="Grid_detail" Margin="20,0,20,0" >
+                                  Background="#383A3F" Height="80" x:Name="Grid_detail"  >
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
@@ -123,15 +115,16 @@
                                     <TextBlock Grid.Column="3" Text="방 번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
                                     <TextBlock Grid.Column="4" Text="데이터 수" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
 
-                                    <TextBlock Grid.Column="0" Text="{Binding searches.danji }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding searches.build }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
-                                    <TextBlock Grid.Column="2" Text="{Binding searches.house }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
-                                    <TextBlock Grid.Column="3" Text="{Binding searches.room }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
+                                    <TextBlock Grid.Column="0" Text="{Binding searches.DANJI_ID }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding searches.BUILD_ID }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding searches.HOUSE_ID }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
+                                    <TextBlock Grid.Column="3" Text="{Binding searches.ROOM_ID }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
                                     <TextBlock Grid.Column="4" Text="{Binding Count }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
 
                                 </Grid>
                                 <Grid Grid.Row="1">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
@@ -147,18 +140,23 @@
                                     <CheckBox Grid.Column="2" Content="기기 ON/OFF" Foreground="#FFd9e1e8" IsChecked="{Binding searches.on_off}" 
                                               Checked="Checked_Graph" Unchecked="Checked_Graph" Background="#F6B352" Margin="30,0,0,0" FontSize="12"/>
 
-                                    <TextBlock Grid.Column="3" Text="{Binding mindaystring}" Foreground="#FFd9e1e8" FontSize="12" 
-                                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                    <TextBlock Grid.Column="4" Text="{Binding maxdaystring}" Foreground="#FFd9e1e8" FontSize="12"
-                                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
-                                    <ComboBox Name="combo_interval" Grid.Column="5" FontSize="12" Foreground="#FFd9e1e8"
+                                    <DatePicker Grid.Column="3" SelectedDate="{Binding lilday}" Foreground="#FFd9e1e8" Margin="10,0,10,0" FontSize="12"/>
+                                    <DatePicker Grid.Column="4" SelectedDate="{Binding bigday}" Foreground="#FFd9e1e8" Margin="10,0,10,0" FontSize="12"/>
+
+                                    <ComboBox x:Name="combo_interval" Grid.Column="5" FontSize="12" Foreground="#F6B352" SelectedIndex="{Binding searches.interval}" Margin="10,0,10,0"
                                               VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                                        <ComboBoxItem Content="30초"/>
-                                        <ComboBoxItem Content="60초"/>
-                                        <ComboBoxItem Content="10분"/>
-                                        <ComboBoxItem Content="1시간"/>
+                                        <ComboBoxItem Content="6"/>
+                                        <ComboBoxItem Content="30"/>
+                                        <ComboBoxItem Content="60"/>
+                                        <ComboBoxItem Content="360"/>
                                     </ComboBox>
+
+                                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Grid.Column="6"
+                                            Width="25" Height="25" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}"
+                                            Click="Button_Reload">
+                                        <materialDesign:PackIcon Kind="Close"/>
+                                    </Button>
 
 
 

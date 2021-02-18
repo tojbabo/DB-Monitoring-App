@@ -1,8 +1,9 @@
-﻿using LiveCharts;
-using LiveCharts.Wpf;
+﻿
 using MONITOR_APP.MODEL;
 using MONITOR_APP.UTILITY;
 using MONITOR_APP.VIEW;
+using OxyPlot;
+using OxyPlot.Axes;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -34,45 +35,22 @@ namespace MONITOR_APP.VIEWMODEL
         // TABLE을 통해 CAHRT를 생성하는 함수
         void CreateChart(object opt)
         {
-            string[] options = (string[])opt;
-            string table = options[0];
-            string danji = options[1];
-            string build = options[2];
-            string house = options[3];
-            string room = options[4];
-            bool curtmp = Convert.ToBoolean(options[5]);
-            bool settmp = Convert.ToBoolean(options[6]);
-            bool onff = Convert.ToBoolean(options[7]);
-            int amount = Convert.ToInt32(options[11]);
+            SearchData data = (SearchData)opt;
 
             #region 선언부
             ChartData chart = new ChartData();
-            Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-            {
-                Vms.Add(chart);
-            }));
 
-            DataTable dt = GetDataTable(options);
-            Console.WriteLine($"dt count is :{dt.Rows.Count}");
+            DataTable dt = GetDataTable(data);
+
 
             if (dt.Rows.Count == 0)
             {
                 MessageBox.Show("데이터를 찾을 수 없습니다.");
-                Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-                {
-                    Vms.Remove(chart);
-                }));
+                
                 return;
             }
 
-
-            ChartValues<double> set_temp = new ChartValues<double>();
-            ChartValues<double> cur_temp = new ChartValues<double>();
-            ChartValues<double> data_onoff = new ChartValues<double>();
-            double set;
-            double cur;
-            double onoff;
-            string time;
+            double set, cur, onoff,time;
             #endregion
 
             #region 데이터 저장부
@@ -81,47 +59,32 @@ namespace MONITOR_APP.VIEWMODEL
             {
                 foreach (DataRow r in dt.Rows)
                 {
-                    if (i == amount) break;
+                    if (i == data.amount) break;
                     i++;
                     try
                     {
                         set = Convert.ToDouble(r["SET_TEMP"].ToString()) / 10;
                         cur = Convert.ToDouble(r["CUR_TEMP"].ToString()) / 10;
-                        onoff = (bool)r["VALVE_STATUS"] ? 1 : 0;
-                        time = TimeConverter.GetAll(r["TIME"].ToString());
+                        onoff = (bool)r["VALVE_STATUS"] ? 3 : 0;
+                        time = DateTimeAxis.ToDouble(TimeConverter.ConvertTimestamp(Convert.ToDouble(r["TIME"].ToString())));
                     }
                     catch(Exception e)
                     {
                         continue;
                     }
 
-
-                    chart.set_tmp.Add(set);
-                    chart.cur_tmp.Add(cur);
-                    chart.onff.Add(onoff);
-                    chart.Labels.Add(time);
+                    chart.onff.Add(new DataPoint(time, onoff));
+                    chart.set.Add(new DataPoint(time, set));
+                    chart.cur.Add(new DataPoint(time, cur));
                 }
 
-                chart.title = $"{danji} - {build} - {house} - {room}";
-                chart.amount = amount;
-                chart.minday = Convert.ToInt64(options[8]);
-                chart.maxday = Convert.ToInt64(options[9]);
-                chart.interval = Convert.ToInt32(options[10]);
+                chart.Count = i;
 
                 chart.selected = false;
-                chart.searches = new SearchData
-                {
-                    danji = danji,
-                    build = build,
-                    house = house,
-                    room = room,
-
-                    tmp_cur = curtmp,
-                    tmp_set = settmp,
-                    on_off = onff
-                };
+                chart.searches = data;
 
                 chart.Drawing();
+                Vms.Add(chart);
             }));
 
             #endregion
@@ -145,9 +108,9 @@ namespace MONITOR_APP.VIEWMODEL
                 conn = head.getConnect();
             }
 
-            string query = MySQL.SearchQuery("sensor_data");
+            string query = DB_mysql.SearchQuery("sensor_data");
 
-            var table = MySQL.SelectTable(conn, query);
+            var table = DB_mysql.SelectTable(conn, query);
             if (table == null) return;
 
             Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
@@ -156,10 +119,10 @@ namespace MONITOR_APP.VIEWMODEL
                 {
                     Searches.Add(new SearchData()
                     {
-                        danji = r["DANJI_ID"].ToString(),
-                        build = r["BUILD_ID"].ToString(),
-                        house = r["HOUSE_ID"].ToString(),
-                        room = r["ROOM_ID"].ToString(),
+                        DANJI_ID = r["DANJI_ID"].ToString(),
+                        BUILD_ID = r["BUILD_ID"].ToString(),
+                        HOUSE_ID = r["HOUSE_ID"].ToString(),
+                        ROOM_ID = r["ROOM_ID"].ToString(),
                     });
                 }
             }));
@@ -198,12 +161,10 @@ namespace MONITOR_APP.VIEWMODEL
 
         }
         // 검색 조건 설정 윈도우 응답 함수
-        void SOW_OnChildTextInputEvent(string Parameters)
+        void SOW_OnChildTextInputEvent(object Parameters)
         {
             if (Parameters != null)
             {
-                string[] options = Parameters.Split('\\');
-
                 if (SOW != null)
                 {
                     SOW.Close();
@@ -212,17 +173,17 @@ namespace MONITOR_APP.VIEWMODEL
                 }
 
                 Thread t = new Thread(new ParameterizedThreadStart(CreateChart));
-                t.Start(options);
+                t.Start(Parameters);
                 //CreateChart(options);
             }
             SOW = null;
         }
         // 입력 조건을 기반으로 SQL 서버로부터 TABLE 얻어오는 함수
-        DataTable GetDataTable(string[] opts)
+        DataTable GetDataTable(object obj)
         {
             var conn = head.getConnect();
 
-            DataTable dt = MySQL.SelectTable(conn, MySQL.MakeQuery(opts));
+            DataTable dt = DB_mysql.SelectTable(conn, DB_mysql.MakeQuery(obj));
 
             if (dt == null) MessageBox.Show("data table is null");
 
@@ -254,11 +215,11 @@ namespace MONITOR_APP.VIEWMODEL
             string maxquery = query + danji + build + house + room + " ORDER BY ID DESC LIMIT 1;";
 
 
-            var table = MySQL.SelectTable(conn, minquery);
+            var table = DB_mysql.SelectTable(conn, minquery);
 
             double min = Convert.ToDouble(table.Rows[0]["TIME"].ToString());
 
-            table = MySQL.SelectTable(conn, maxquery);
+            table = DB_mysql.SelectTable(conn, maxquery);
 
             double max = Convert.ToDouble(table.Rows[0]["TIME"].ToString()) + 1;
 
