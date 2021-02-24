@@ -1,4 +1,5 @@
-﻿using MONITOR_APP.UTILITY;
+﻿using InfluxDB.Client;
+using MONITOR_APP.UTILITY;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,18 @@ namespace MONITOR_APP.VIEWMODEL
         public MySqlConnection getConnect()
         {
             return conn;
+        }
+
+        private InfluxDBClient influxDBClient;
+        public InfluxDBClient newClient(string ip, string port, string id, string passwd)
+        {
+            influxDBClient = DB_influx.GetClient(ip, port, id, passwd);
+            return influxDBClient;
+        }
+        public InfluxDBClient getClient()
+        {
+            if (influxDBClient == null) return null;
+            return influxDBClient;
         }
 
         private BASE()

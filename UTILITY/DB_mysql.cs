@@ -114,7 +114,7 @@ namespace MONITOR_APP.UTILITY
 
         static public DataTable SelectTable(MySqlConnection conn, string query)
         {
-            Console.WriteLine($"Query is : {query}");
+            Console.WriteLine($"[MYSQL] >> {query}");
             if (DBOpen(conn) == true)
             {
                 try

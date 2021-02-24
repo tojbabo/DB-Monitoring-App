@@ -1,6 +1,7 @@
 ﻿
 using MONITOR_APP.UTILITY;
 using OxyPlot;
+using OxyPlot.Annotations;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
@@ -61,6 +62,10 @@ namespace MONITOR_APP.MODEL
             }
         }
 
+        public string mode;
+
+        public List<RectangleAnnotation> Rectangles;
+
         public int Count { get; set; }
 
         public bool isComboOpen = false;
@@ -72,7 +77,7 @@ namespace MONITOR_APP.MODEL
         public ChartData()
         {
             plt = new PlotController();
-            plt.UnbindAll();
+            //plt.UnbindAll();
 
 
             vm = new PlotModel();
@@ -80,19 +85,18 @@ namespace MONITOR_APP.MODEL
             cur = new List<DataPoint>();
             onff = new List<DataPoint>();
             searches = new SearchData();
+            Rectangles = new List<RectangleAnnotation>();
         }
 
         public void ReFresh()
         {
+            vm.Annotations.Clear();
             vm = new PlotModel();
             Drawing();
         }
 
         public void Drawing()
         {
-            vm.Title = $"Room: {this.searches.ROOM_ID}";
-            
-
             vm.Axes.Add(new DateTimeAxis()
             {
                 
@@ -113,6 +117,8 @@ namespace MONITOR_APP.MODEL
                 AbsoluteMinimum = -5,
                 AbsoluteMaximum = 40,
             }) ;
+
+            vm.Title = $"ROOM {searches.ROOM_ID} [{mode} mode]";
 
             if(searches.tmp_set) vm.Series.Add(new StairStepSeries
             {
@@ -140,9 +146,15 @@ namespace MONITOR_APP.MODEL
                 LineStyle = LineStyle.Solid,
                 Color = OxyColors.Green,
             });
+
+            foreach(var v in Rectangles)
+            {
+                vm.Annotations.Add(v);
+            }
         }
 
         #endregion
+
     }
 
 }

@@ -247,6 +247,7 @@
     <Compile Include="UTILITY\DB_mysql.cs" />
     <Compile Include="UTILITY\TimeConverter.cs" />
     <Compile Include="UTILITY\VisibleConverter.cs" />
+    <Compile Include="UTILITY\WidthConverter.cs" />
     <Compile Include="VIEWMODEL\BASE.cs" />
     <Compile Include="VIEWMODEL\VM_MainFrame.cs" />
     <Compile Include="VIEWMODEL\VM_MainPage.cs" />

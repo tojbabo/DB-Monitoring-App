@@ -40,7 +40,7 @@ namespace MONITOR_APP.VIEW
             vm = head.getMV_MainPage();
             this.DataContext = vm;
 
-            Thread t = new Thread(vm.CreateSearchData);
+            Thread t = new Thread(vm.ddd);
             t.Start();
             //vm.CreateSearchData();
         }
@@ -281,6 +281,37 @@ namespace MONITOR_APP.VIEW
             var b = (ChartData)a.DataContext;
 
             Console.WriteLine($"result is : {TimeConverter.GetDate( b.searches.mintime)} - {TimeConverter.GetDate( b.searches.maxtime)} - {b.searches.interval}");
+        }
+
+        bool istile = false;
+        public void Tiling()
+        {
+            var a = new ObservableCollection<ChartData>(vm.Vms);
+            vm.Vms.Clear();
+            
+            if (istile == true)
+            {
+                FrameworkElementFactory factory = new FrameworkElementFactory(typeof(StackPanel));
+                ItemsPanelTemplate template = new ItemsPanelTemplate();
+                template.VisualTree = factory;
+                listBox.ItemsPanel = template;
+                istile = false;
+            }
+            else
+            {
+                FrameworkElementFactory factory = new FrameworkElementFactory(typeof(WrapPanel));
+                factory.SetValue(WrapPanel.OrientationProperty, Orientation.Horizontal);
+                ItemsPanelTemplate template = new ItemsPanelTemplate();
+                template.VisualTree = factory;
+                listBox.ItemsPanel = template;
+                istile = true;
+            }
+
+            foreach (var item in a)
+            {
+                item.ReFresh();
+                vm.Vms.Add(item);
+            }
         }
     }
 }

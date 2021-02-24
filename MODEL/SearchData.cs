@@ -44,6 +44,7 @@
             return sql;
         }
 
+        public SearchData() { }
     }
 
 }
