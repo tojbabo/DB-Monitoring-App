@@ -37,20 +37,23 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="설정" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="30" Foreground="#F6B352" FontStyle="Normal"></TextBlock>
+            <TextBlock Grid.Row="0" Text="Control" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="30" Foreground="#F6B352" FontStyle="Normal"></TextBlock>
             <Separator Grid.Row="0" VerticalAlignment="Bottom" Margin="5" Background="#F6B352"></Separator>
             <Button Grid.Row="1" FontSize="20" Click="Button_ADD" Content="Add"  HorizontalContentAlignment="Right"  
                     Width="auto" Height="Auto" Foreground="#F6B352" Background="{x:Null}" BorderBrush="{x:Null}"/>
             <Button Grid.Row="2" FontSize="20" Click="Button_SEARCH" Content="Search"  HorizontalContentAlignment="Right"  
                     Width="auto"  Height="Auto" Foreground="#F6B352" Background="{x:Null}" BorderBrush="{x:Null}"/>
-            <Button Grid.Row="3" FontSize="20" Click="Button_CLEAR" Content="CLEAR" HorizontalContentAlignment="Right"  
+            <Button Grid.Row="3" FontSize="20" Click="Button_MODIFY" Content="Modify"  HorizontalContentAlignment="Right"  
+                    Width="auto"  Height="Auto" Foreground="#F6B352" Background="{x:Null}" BorderBrush="{x:Null}"/>
+            <Button Grid.Row="4" FontSize="20" Click="Button_CLEAR" Content="CLEAR" HorizontalContentAlignment="Right"  
                     Width="auto"  Height="Auto" Foreground="#F6B352" Background="{x:Null}" BorderBrush="{x:Null}"/>
 
         </Grid>
 
         <Grid Grid.Column="1" Width="280" Background="#F6B352" x:Name="Grid_search" Visibility="Collapsed">
             <ListView Name="listview" ItemsSource="{Binding Searches}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
-                      MouseDoubleClick="ListView_DoubleClick">
+                      MouseDoubleClick="ListView_DoubleClick"
+                      MouseRightButtonUp="ListView_RightUp">
                 <ListView.View>
                     <GridView>
                         <GridView.ColumnHeaderContainerStyle>
@@ -82,88 +85,11 @@
                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
                     PreviewMouseMove="ListBox_Drag"
                     Drop="ListBox_Drop"
-                    AllowDrop="True" Grid.RowSpan="2">
+                    AllowDrop="True">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel MinWidth="{Binding ActualWidth, ElementName=listgrid, Converter={util:WidthConverter},ConverterParameter='0.49'}" >
-                            
-                            <oxys:PlotView Height="300" 
-                                               Model="{Binding vm}" Controller="{Binding plt}"
-                                               MouseRightButtonDown="Graph_RightDown"
-                                               MouseDoubleClick="Graph_DoubleClick"
-                                               PreviewMouseLeftButtonDown="Graph_LeftDown" >
-                            </oxys:PlotView>
-
-                            <Grid Visibility="{Binding selected, Converter={StaticResource converter}}" 
-                                  Background="#383A3F" Height="80" x:Name="Grid_detail"  >
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Grid.Column="0" Text="단지번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
-                                    <TextBlock Grid.Column="1" Text="건물번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
-                                    <TextBlock Grid.Column="2" Text="집 번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
-                                    <TextBlock Grid.Column="3" Text="방 번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
-                                    <TextBlock Grid.Column="4" Text="데이터" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
-
-                                    <TextBlock Grid.Column="0" Text="{Binding searches.DANJI_ID }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding searches.BUILD_ID }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
-                                    <TextBlock Grid.Column="2" Text="{Binding searches.HOUSE_ID }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
-                                    <TextBlock Grid.Column="3" Text="{Binding searches.ROOM_ID }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
-                                    <TextBlock Grid.Column="4" Text="{Binding Count }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
-
-                                </Grid>
-                                <Grid Grid.Row="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <CheckBox Grid.Column="0" Content="현재 온도" Foreground="#FFd9e1e8" IsChecked="{Binding searches.tmp_cur}" 
-                                              Checked="Checked_Graph" Unchecked="Checked_Graph" Background="#F6B352" Margin="30,0,0,0" FontSize="12"/>
-                                    <CheckBox Grid.Column="1" Content="목표 온도" Foreground="#FFd9e1e8" IsChecked="{Binding searches.tmp_set}" 
-                                              Checked="Checked_Graph" Unchecked="Checked_Graph" Background="#F6B352" Margin="30,0,0,0" FontSize="12"/>
-                                    <CheckBox Grid.Column="2" Content="기기 ON/OFF" Foreground="#FFd9e1e8" IsChecked="{Binding searches.on_off}" 
-                                              Checked="Checked_Graph" Unchecked="Checked_Graph" Background="#F6B352" Margin="30,0,0,0" FontSize="12"/>
-
-
-                                    <DatePicker Grid.Column="3" SelectedDate="{Binding lilday}" Foreground="#FFd9e1e8" Margin="10,0,10,0" FontSize="12"/>
-                                    <DatePicker Grid.Column="4" SelectedDate="{Binding bigday}" Foreground="#FFd9e1e8" Margin="10,0,10,0" FontSize="12"/>
-
-                                    <ComboBox x:Name="combo_interval" Grid.Column="5" FontSize="12" Foreground="#F6B352" SelectedIndex="{Binding searches.interval}" Margin="10,0,10,0"
-                                              VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                                        <ComboBoxItem Content="6"/>
-                                        <ComboBoxItem Content="30"/>
-                                        <ComboBoxItem Content="60"/>
-                                        <ComboBoxItem Content="360"/>
-                                    </ComboBox>
-
-                                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Grid.Column="6"
-                                            Width="25" Height="25" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}"
-                                            Click="Button_Reload">
-                                        <materialDesign:PackIcon Kind="Close"/>
-                                    </Button>
-
-
-
-                                </Grid>
-                            </Grid>
-                            
-                        </StackPanel>
+                        <local:Chart Graph_DoubleClick="Graph_DoubleClick" Graph_LeftDown="Graph_LeftDown" Graph_RightDown="Graph_RightDown"
+                                     Button_Reload="Button_Reload" Check_Graph="Checked_Graph"/>
                     </DataTemplate>
 
                 </ListBox.ItemTemplate>

@@ -60,26 +60,6 @@ namespace MONITOR_APP.UTILITY
             return InfluxDBClientFactory.Create(
                 $"http://{ip}:{port}", id, pwd.ToCharArray());
         }
-        static public string GetQuery(SearchData s)
-        {
-            return $"from(bucket:\"ZIPSAI/autogen\")" +
-                $" |> range(start: {s.mintime},stop: {s.maxtime})" +
-                $" |> filter(fn: (r)=> r._measurement == \"{s.TABLE}\")" +
-                $" |> filter(fn: (r)=> r.DANJI_ID == \"{s.DANJI_ID}\" and r.BUILD_ID == \"{s.BUILD_ID}\" and r.HOUSE_ID == \"{s.HOUSE_ID}\" and r.ROOM_ID == \"{s.ROOM_ID}\")" +
-                $" |> limit(n: {s.amount})";
-        }
-        static public string GetQuery_Search()
-        {
-            return $"from(bucket:\"ZIPSAI/autogen\")" +
-                $" |> range(start: 0)" +
-                $" |> filter(fn: (r)=> r._measurement == \"sensor_data\")" +
-                $" |> filter(fn: (r)=> r.DANJI_ID != \"0\" and r.BUILD_ID != \"0\" and r.HOUSE_ID != \"0\")" +
-                $" |> distinct(column: \"VALVE_STATUS\")"
-                /*$" |> distinct(column: \"DANJI_ID\")" +
-                $" |> distinct(column: \"BUILD_ID\")" +
-                $" |> distinct(column: \"HOUSE_ID\")" +
-                $" |> distinct(column: \"ROOM_ID\")"*/;
-        }
         static public async Task<List<FluxTable>> ExcuteInflux(InfluxDBClient client,string query)
         {
             Console.WriteLine($"[INFLUX] >> {query}");
@@ -98,17 +78,78 @@ namespace MONITOR_APP.UTILITY
 
             return double.NaN;
         }
-
         static public string GetData(List<FluxTable> tables, string key)
         {
+            List<string> temp = new List<string>();
+            List<int> num = new List<int>();
             foreach(var t in tables)
             {
                 foreach(var d in t.Records)
                 {
-                    if (d.GetField() == key) return Convert.ToString(d.GetValue());
+                    if (d.GetField() == key) //return Convert.ToString(d.GetValue());
+                    {
+                        if (temp.Contains(Convert.ToString(d.GetValue())))
+                        {
+                            int index = temp.IndexOf(Convert.ToString(d.GetValue()));
+                            num[index]++;
+                        }
+                        else
+                        {
+                            temp.Add(Convert.ToString(d.GetValue()));
+                            num.Add(1);
+                        }
+                    }
                 }
             }
-            return null;
+            if(temp.Count ==0)
+                return "";
+            else
+            {
+                int idx = num.IndexOf(num.Max());
+                return temp[idx];
+            }
         }
+
+        #region FLUX QUERY
+        static public string GetQuery(SearchData s)
+        {
+            return $"from(bucket:\"ZIPSAI/autogen\")" +
+                $" |> range(start: {s.mintime},stop: {s.maxtime})" +
+                $" |> filter(fn: (r)=> r._measurement == \"{s.TABLE}\")" +
+                MakeQuery_Filter(s) +
+                $" |> limit(n: {s.amount})";
+        }
+        static public string GetQuery_zero(SearchData s)
+        {
+            return $"from(bucket:\"ZIPSAI/autogen\")" +
+                $" |> range(start: 0)" +
+                $" |> filter(fn: (r)=> r._measurement == \"sensor_data\")" +
+                MakeQuery_Filter(s);
+        }
+        static public string GetQuery_Search()
+        {
+            return $"from(bucket:\"ZIPSAI/autogen\")" +
+                $" |> range(start: 0)" +
+                $" |> filter(fn: (r)=> r._measurement == \"sensor_data\")" +
+                $" |> filter(fn: (r)=> r.DANJI_ID != \"0\" and r.BUILD_ID != \"0\" and r.HOUSE_ID != \"0\")" +
+                $" |> distinct(column: \"VALVE_STATUS\")";
+        }
+        static private string MakeQuery_Filter(SearchData s)
+        {
+            string query = " |> filter(fn: (r) => r.SN != \"0\"";
+            List<string> opt = new List<string>();
+            if (s.DANJI_ID != "") opt.Add($" r.DANJI_ID ==\"{s.DANJI_ID}\"");
+            if (s.BUILD_ID != "") opt.Add($" r.BUILD_ID ==\"{s.BUILD_ID}\"");
+            if (s.HOUSE_ID != "") opt.Add($" r.HOUSE_ID ==\"{s.HOUSE_ID}\"");
+            if (s.ROOM_ID != "") opt.Add($" r.ROOM_ID ==\"{s.ROOM_ID}\"");
+
+            foreach(var v in opt)
+            {
+                if (v != "") query += " and " + v;
+            }
+
+            return query + " )";
+        }
+        #endregion
     }
 }

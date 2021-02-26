@@ -27,6 +27,7 @@ namespace MONITOR_APP.VIEWMODEL
         {
             return mv_mainframe;
         }
+
         private VM_MainPage mv_mainpage;
         public VM_MainPage getMV_MainPage()
         { 

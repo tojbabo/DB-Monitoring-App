@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4EDB4593-9447-4ECD-8093-2C4070E1DFFE}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>MONITOR_APP</RootNamespace>
     <AssemblyName>MONITOR_APP</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -245,12 +245,16 @@
     </Compile>
     <Compile Include="UTILITY\DB_influx.cs" />
     <Compile Include="UTILITY\DB_mysql.cs" />
+    <Compile Include="UTILITY\e_bool.cs" />
     <Compile Include="UTILITY\TimeConverter.cs" />
     <Compile Include="UTILITY\VisibleConverter.cs" />
     <Compile Include="UTILITY\WidthConverter.cs" />
     <Compile Include="VIEWMODEL\BASE.cs" />
     <Compile Include="VIEWMODEL\VM_MainFrame.cs" />
     <Compile Include="VIEWMODEL\VM_MainPage.cs" />
+    <Compile Include="VIEW\Chart.xaml.cs">
+      <DependentUpon>Chart.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VIEW\DBConnectWindow.xaml.cs">
       <DependentUpon>DBConnectWindow.xaml</DependentUpon>
     </Compile>
@@ -287,6 +291,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="VIEW\Chart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="VIEW\DBConnectWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

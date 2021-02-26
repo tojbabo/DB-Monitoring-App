@@ -153,7 +153,7 @@ namespace MONITOR_APP.UTILITY
 
             string query = $"SELECT * FROM {table} WHERE ID IS NOT NULL ";
 
-            return query +$"{s.make_WHERE()};";
+            return query +$"{make_WHERE(s)};";
         }
 
         static public string SearchQuery(string table)
@@ -164,6 +164,28 @@ namespace MONITOR_APP.UTILITY
                 $"WHERE DANJI_ID='2323' AND BUILD_ID='202' AND TIME > {minTime} " +
                 $"GROUP BY DANJI_ID,BUILD_ID,HOUSE_ID,ROOM_ID";
             return query;
+        }
+
+        static public string make_WHERE(SearchData s)
+        {
+            string sql = "";
+
+            sql += (s.DANJI_ID == "") ? "" : $" AND DANJI_ID = {s.DANJI_ID}";
+            sql += (s.BUILD_ID == "") ? "" : $" AND BUILD_ID = {s.BUILD_ID}";
+            sql += (s.HOUSE_ID == "") ? "" : $" AND HOUSE_ID = {s.HOUSE_ID}";
+            sql += (s.ROOM_ID == "") ? "" : $" AND ROOM_ID = {s.ROOM_ID}";
+
+            sql += (s.mintime == 0) ? "" : $" AND TIME > {s.mintime}";
+            sql += (s.maxtime == 0) ? "" : $" AND TIME < {s.maxtime}";
+            int interv = 0;
+            if (s.interval == 0) interv = 6;
+            else if (s.interval == 1) interv = 30;
+            else if (s.interval == 2) interv = 60;
+            else if (s.interval == 3) interv = 360;
+
+            sql += (interv == 0) ? "" : $" AND mod(substr(TIME, 7, 3),{interv}) <= 2";
+
+            return sql;
         }
     }
 }

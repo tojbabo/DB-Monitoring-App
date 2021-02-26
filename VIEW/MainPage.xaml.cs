@@ -40,9 +40,46 @@ namespace MONITOR_APP.VIEW
             vm = head.getMV_MainPage();
             this.DataContext = vm;
 
-            Thread t = new Thread(vm.ddd);
+            Thread t = new Thread(vm.CreateSearchData_Influx);
             t.Start();
             //vm.CreateSearchData();
+        }
+        public void GridTurnOnOff()
+        {
+            Grid_side.Visibility = (Grid_side.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
+            Col.Width = (Grid_side.Visibility == Visibility.Visible) ? new GridLength(/*1,GridUnitType.Star*/130) : GridLength.Auto;
+
+            Grid_search.Visibility = Visibility.Collapsed;
+        }
+        bool istile = false;
+        public void Tiling(e_bool e = e_bool.manual)
+        {
+            var a = new ObservableCollection<ChartData>(vm.Vms);
+            vm.Vms.Clear();
+
+            if ((istile == true && e == e_bool.manual) || e == e_bool.True)
+            {
+                FrameworkElementFactory factory = new FrameworkElementFactory(typeof(StackPanel));
+                ItemsPanelTemplate template = new ItemsPanelTemplate();
+                template.VisualTree = factory;
+                listBox.ItemsPanel = template;
+                istile = false;
+            }
+            else if ((istile == false && e == e_bool.manual) || e == e_bool.False)
+            {
+                FrameworkElementFactory factory = new FrameworkElementFactory(typeof(WrapPanel));
+                factory.SetValue(WrapPanel.OrientationProperty, Orientation.Horizontal);
+                ItemsPanelTemplate template = new ItemsPanelTemplate();
+                template.VisualTree = factory;
+                listBox.ItemsPanel = template;
+                istile = true;
+            }
+
+            foreach (var item in a)
+            {
+                item.ReFresh();
+                vm.Vms.Add(item);
+            }
         }
         
         #region Event
@@ -59,6 +96,10 @@ namespace MONITOR_APP.VIEW
             //vm.f();
             Grid_search.Visibility = (Grid_search.Visibility == Visibility.Visible)?Visibility.Collapsed:Visibility.Visible;
         }
+        private void Button_MODIFY(object sender, RoutedEventArgs e)
+        {
+            vm.Chart_Modify();
+        }
 
         private void ListView_DoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -66,8 +107,15 @@ namespace MONITOR_APP.VIEW
 
             if (item == null) return;
 
-            string opt = $"{item.DANJI_ID}\\{item.BUILD_ID}\\{item.HOUSE_ID}\\{item.ROOM_ID}";
-            vm.RequestSelect(opt);  
+            vm.RequestSelect(item,this);  
+        }
+        private void ListView_RightUp(object sender, MouseButtonEventArgs e)
+        {
+            var v = listview.SelectedItems.Cast<SearchData>().ToList();
+
+            if (v == null) return;
+
+            vm.RequestSelect(v,this);
         }
         private void Graph_RightDown(object sender, MouseButtonEventArgs e)
         {
@@ -110,13 +158,34 @@ namespace MONITOR_APP.VIEW
             //content.ReFresh();
             //  }
         }
+        // 리스트 박스, 디테일 창 내 체크박스 이벤트
+        private void Checked_Graph(object sender, RoutedEventArgs e)
+        {
+            var c = e.OriginalSource as CheckBox;
+            var datacontext = c?.DataContext as ChartData;
+            ChartData content = (ChartData)datacontext;
+
+            int index = vm.Vms.IndexOf(content);
+
+            vm.Vms.Remove(content);
+            content.ReFresh();
+
+            vm.Vms.Insert(index, content);
+        }
+        private void Button_Reload(object sender, RoutedEventArgs e)
+        {
+            var a = sender as Button;
+            var b = (ChartData)a.DataContext;
+
+            Console.WriteLine($"result is : {TimeConverter.GetDate( b.searches.mintime)} - {TimeConverter.GetDate( b.searches.maxtime)} - {b.searches.interval}");
+        }
         #endregion
 
         #region  drag & drop
 
         private bool isDrag = false;
         private int indexDrag = -1;
-
+        
         // 리스트 박스 단순 왼쪽 클릭 - 리스트 박스 요소가 아닌 그래프를 클릭해야 반응
         private void Graph_LeftDown(object sender, MouseButtonEventArgs e)
         {
@@ -199,119 +268,5 @@ namespace MONITOR_APP.VIEW
 
         #endregion
 
-        public void GridTurnOnOff()
-        {
-            Grid_side.Visibility = (Grid_side.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
-            Col.Width = (Grid_side.Visibility == Visibility.Visible) ? new GridLength(/*1,GridUnitType.Star*/130) : GridLength.Auto;
-            Grid_search.Visibility = Visibility.Collapsed;
-        }
-        // 리스트 박스 자체 왼쪽 클릭
-        private void ListBox_LeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (isDrag == true)
-            {
-                ListBoxItem listboxitem = FindAncestor<ListBoxItem>
-                                                  ((DependencyObject)e.OriginalSource);
-                if (listboxitem == null) return;
-
-                ChartData content = (ChartData)(listboxitem.Content);
-
-                content.selected = !content.selected;
-
-                int index = vm.Vms.IndexOf(content);
-
-                vm.Vms.Remove(content);
-                vm.Vms.Insert(index, content);
-
-                content.ReFresh();
-            }
-        }
-        // 리스트 박스, 디테일 창 내 체크박스 이벤트
-        private void Checked_Graph(object sender, RoutedEventArgs e)
-        {
-            var c = e.OriginalSource as CheckBox;
-            var datacontext = c?.DataContext as ChartData;
-            ChartData content = (ChartData)datacontext;
-
-            int index = vm.Vms.IndexOf(content);
-
-            vm.Vms.Remove(content);
-            content.ReFresh();
-
-            vm.Vms.Insert(index, content);
-        }
-
-        private void Button_Expand(object sender, RoutedEventArgs e)
-        {
-            ListBoxItem listboxitem = FindAncestor<ListBoxItem>
-                                              ((DependencyObject)e.OriginalSource);
-            if (listboxitem == null) return;
-
-            ChartData content = (ChartData)(listboxitem.Content);
-            content.selected = !content.selected;
-
-            int index = vm.Vms.IndexOf(content);
-
-            vm.Vms.Remove(content);
-            content.ReFresh();
-
-            vm.Vms.Insert(index, content);
-
-        }
-
-        private void Button_Delete(object sender, RoutedEventArgs e)
-        {
-            ListBoxItem listboxitem = FindAncestor<ListBoxItem>
-                                              ((DependencyObject)e.OriginalSource);
-
-            if (listboxitem == null) return;
-
-            ChartData content = (ChartData)(listboxitem.Content);
-
-            vm.Vms.Remove(content);
-        }
-
-        private void Button_Select(object sender, MouseButtonEventArgs e)
-        {
-            if (isDrag == false) isDrag = true;
-        }
-        private void Button_Reload(object sender, RoutedEventArgs e)
-        {
-            var a = sender as Button;
-            var b = (ChartData)a.DataContext;
-
-            Console.WriteLine($"result is : {TimeConverter.GetDate( b.searches.mintime)} - {TimeConverter.GetDate( b.searches.maxtime)} - {b.searches.interval}");
-        }
-
-        bool istile = false;
-        public void Tiling()
-        {
-            var a = new ObservableCollection<ChartData>(vm.Vms);
-            vm.Vms.Clear();
-            
-            if (istile == true)
-            {
-                FrameworkElementFactory factory = new FrameworkElementFactory(typeof(StackPanel));
-                ItemsPanelTemplate template = new ItemsPanelTemplate();
-                template.VisualTree = factory;
-                listBox.ItemsPanel = template;
-                istile = false;
-            }
-            else
-            {
-                FrameworkElementFactory factory = new FrameworkElementFactory(typeof(WrapPanel));
-                factory.SetValue(WrapPanel.OrientationProperty, Orientation.Horizontal);
-                ItemsPanelTemplate template = new ItemsPanelTemplate();
-                template.VisualTree = factory;
-                listBox.ItemsPanel = template;
-                istile = true;
-            }
-
-            foreach (var item in a)
-            {
-                item.ReFresh();
-                vm.Vms.Add(item);
-            }
-        }
     }
 }

@@ -22,29 +22,8 @@
 
         public double amount;
 
-        public string make_WHERE()
-        {
-            string sql = "";
 
-            sql += (DANJI_ID == "") ? "" : $" AND DANJI_ID = {DANJI_ID}";
-            sql += (BUILD_ID == "") ? "" : $" AND BUILD_ID = {BUILD_ID}";
-            sql += (HOUSE_ID == "") ? "" : $" AND HOUSE_ID = {HOUSE_ID}";
-            sql += (ROOM_ID == "") ? "" : $" AND ROOM_ID = {ROOM_ID}";
-
-            sql += (mintime == 0) ? "" : $" AND TIME > {mintime}";
-            sql += (maxtime == 0) ? "" : $" AND TIME < {maxtime}";
-            int interv = 0;
-            if (interval == 0) interv = 6;
-            else if (interval == 1) interv = 30;
-            else if (interval == 2) interv = 60;
-            else if (interval == 3) interv = 360;
-
-            sql += (interv == 0) ? "" : $" AND mod(substr(TIME, 7, 3),{interv}) <= 2";
-
-            return sql;
-        }
-
-        public SearchData() { }
+        public SearchData() { mintime = -1; maxtime = -1; }
     }
 
 }
