@@ -252,9 +252,6 @@
     <Compile Include="VIEWMODEL\BASE.cs" />
     <Compile Include="VIEWMODEL\VM_MainFrame.cs" />
     <Compile Include="VIEWMODEL\VM_MainPage.cs" />
-    <Compile Include="VIEW\Chart.xaml.cs">
-      <DependentUpon>Chart.xaml</DependentUpon>
-    </Compile>
     <Compile Include="VIEW\DBConnectWindow.xaml.cs">
       <DependentUpon>DBConnectWindow.xaml</DependentUpon>
     </Compile>
@@ -291,10 +288,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="VIEW\Chart.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="VIEW\DBConnectWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

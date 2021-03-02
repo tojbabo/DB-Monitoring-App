@@ -126,7 +126,7 @@ namespace MONITOR_APP.VIEW
             try
             {
                 ChartData content = (ChartData)(listboxitem.Content);
-            vm.Vms.Remove(content);
+                vm.Vms.Remove(content);
             }
             catch(Exception err)
             {
@@ -143,6 +143,9 @@ namespace MONITOR_APP.VIEW
                                           ((DependencyObject)e.OriginalSource);
             if (listboxitem == null) return;
 
+            if (!(listboxitem.Content is ChartData)) return;
+            
+            
             ChartData content = (ChartData)(listboxitem.Content);
 
             content.selected = !content.selected;
@@ -226,13 +229,10 @@ namespace MONITOR_APP.VIEW
                 ChartData content = e.Data.GetData("MOVE") as ChartData;
 
                 if (indexDrag == -1) return;
-                    
-
+                   
                 int index;
                 var temp = FindAncestor<ListBoxItem>
-                                ((DependencyObject)(listBox.InputHitTest(e.GetPosition(listBox))));
-
-                
+                                ((DependencyObject)(listBox.InputHitTest(e.GetPosition(listBox)))); 
 
                 ChartData item = (ChartData)temp?.DataContext;
 
@@ -241,9 +241,9 @@ namespace MONITOR_APP.VIEW
                 else
                     index = listBox.Items.IndexOf(item);
 
-                vm.Vms.Move(indexDrag, index);
-
+                vm.Vms.Remove(content);
                 content.ReFresh();
+                vm.Vms.Insert(index, content);
 
                 indexDrag = -1;
                 isDrag = false;

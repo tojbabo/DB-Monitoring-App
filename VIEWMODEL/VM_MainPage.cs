@@ -88,7 +88,6 @@ namespace MONITOR_APP.VIEWMODEL
             double set, cur, onoff, time;
             int aimode, premode = -1;
             int datanum = 0;
-
             double rect = -1;
             time = 0;
             tables.ForEach(table =>
@@ -150,6 +149,7 @@ namespace MONITOR_APP.VIEWMODEL
                                 {
                                     chart.Rectangles.Add(new RectangleAnnotation()
                                     {
+                                        
                                         Fill = GetColor(premode),
                                         MinimumX = rect,
                                         MaximumX = time,
@@ -167,6 +167,8 @@ namespace MONITOR_APP.VIEWMODEL
             {
                 chart.Rectangles.Add(new RectangleAnnotation()
                 {
+                    
+                    ToolTip = "qwetty",
                     Fill = GetColor(premode),
                     MinimumX = rect,
                     MaximumX = time,

@@ -40,6 +40,8 @@ namespace MONITOR_APP.VIEW
             
             mp = new MainPage();
             Page.NavigationService.Navigate(mp);
+
+            //this.ShowInTaskbar = false;
         }
 
 #region Event

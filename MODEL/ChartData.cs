@@ -101,27 +101,28 @@ namespace MONITOR_APP.MODEL
             {
                 
                 Position = AxisPosition.Bottom,
-                IsZoomEnabled = false,
-                IsPanEnabled = false,
+                //IsZoomEnabled = false,
+                //IsPanEnabled = false,
 
-                //AbsoluteMinimum = minday,
-                //AbsoluteMaximum = maxday,
+                AbsoluteMinimum = set.First().X,
+                AbsoluteMaximum = set.Last().X,
             }) ;
             vm.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Left,
-                IsZoomEnabled = false,
-                IsPanEnabled = false,
+                //IsZoomEnabled = false,
+                //IsPanEnabled = false,
                 Minimum = -5,
                 Maximum = 40,
                 AbsoluteMinimum = -5,
                 AbsoluteMaximum = 40,
             }) ;
 
-            vm.Title = $"ROOM {searches.ROOM_ID} [{mode} mode]";
+            //vm.Title = $"ROOM {searches.ROOM_ID} [{mode} mode]";
 
-            if(searches.tmp_set) vm.Series.Add(new StairStepSeries
+            if (searches.tmp_set) vm.Series.Add(new StairStepSeries
             {
+                //TrackerFormatString = "x={2},\ny={4}",
                 Title = "set",
                 ItemsSource = set,
                 StrokeThickness = 2,
