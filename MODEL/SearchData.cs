@@ -10,10 +10,6 @@
         public string ROOM_ID { get; set; }
         
 
-        public bool tmp_cur { get; set; }
-        public bool tmp_set { get; set; }
-        public bool on_off { get; set; }
-
         public double mintime;
         public double maxtime;
        // public double interval { get; set; }

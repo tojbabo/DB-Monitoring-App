@@ -61,7 +61,6 @@ namespace MONITOR_APP.MODEL
         {
             get
             {
-                TimeSpan t = new TimeSpan();
                 return TimeSpan.FromSeconds(onfftime);
             }
         }

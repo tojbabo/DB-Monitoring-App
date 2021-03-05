@@ -85,8 +85,11 @@ namespace MONITOR_APP.VIEW
         }
         private void Button_Tiling(object sender, RoutedEventArgs e)
         {
-           
-            mp.Tiling();
+            if (Grid_Opt.Visibility == Visibility.Visible) Grid_Opt.Visibility = Visibility.Collapsed;
+
+            else Grid_Opt.Visibility = Visibility.Visible;
+            
+            //mp.Tiling();
         }
 #endregion
 

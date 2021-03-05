@@ -29,7 +29,6 @@ namespace MONITOR_APP.VIEWMODEL
 
         public ObservableCollection<SearchData> Searches { get; set; }
         public ObservableCollection<ChartData> Vms { get; set; }
-
         public VM_MainPage()
         {
             head = BASE.getBASE();
@@ -322,7 +321,6 @@ namespace MONITOR_APP.VIEWMODEL
         // SEARCH WINDOW 생성
         public async void RequestSelect(SearchData s = null, object o = null)
         {
-
             if (SOW == null)
             {
                 s = await Getminmax(s);

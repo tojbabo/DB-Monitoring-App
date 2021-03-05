@@ -61,19 +61,22 @@
 
 
 
-            <Button Grid.Column="3"
-                        Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_Tiling">
-                <materialDesign:PackIcon Kind="Apps" Margin="0" Width="auto" Height="auto"/>
-            </Button>
-            <Button Grid.Column="4" 
+            <Button Grid.Column="3" 
                         Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_DBConn">
                 <materialDesign:PackIcon Kind="DatabaseCheck" Margin="0" Width="auto" Height="auto"/>
             </Button>
-
+            <Button Grid.Column="4"
+                        Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_Tiling">
+                <materialDesign:PackIcon Kind="Apps" Margin="0" Width="auto" Height="auto"/>
+            </Button>
 
         </Grid>
-        
-        
-        <Frame Grid.Row="2" Name="Page" Grid.ColumnSpan="2"/>
+
+
+        <Grid x:Name="Grid_Opt" Margin="893,0,0,507" Grid.Row="2" Background="Black"/>
+
+        <Frame Grid.Row="2" Name="Page"/>
+
+
     </Grid>
 </Window>

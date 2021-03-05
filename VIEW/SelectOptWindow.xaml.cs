@@ -57,9 +57,6 @@ namespace MONITOR_APP.VIEW
 
                 _searchData.amount = Convert.ToDouble(amount.Text);
 
-                _searchData.tmp_set = (bool)SETTMP.IsChecked;
-                _searchData.tmp_cur = (bool)CURTMP.IsChecked;
-                _searchData.on_off = (bool)ONFF.IsChecked;
 
                 if (OnChildTextInputEvent != null) OnChildTextInputEvent(_searchData);
             }
@@ -77,9 +74,6 @@ namespace MONITOR_APP.VIEW
 
                     v.amount = Convert.ToDouble(amount.Text);
 
-                    v.tmp_set = (bool)SETTMP.IsChecked;
-                    v.tmp_cur = (bool)CURTMP.IsChecked;
-                    v.on_off = (bool)ONFF.IsChecked;
                 }
                 if (OnChildTextInputEvent != null) OnChildTextInputEvent(_searchDatas);
             }
