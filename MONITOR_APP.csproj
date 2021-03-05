@@ -235,7 +235,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MODEL\DBData.cs" />
+    <Compile Include="MODEL\DBConnection.cs" />
     <Compile Include="MODEL\ChartData.cs" />
     <Compile Include="MODEL\SearchData.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -263,6 +263,9 @@
     </Compile>
     <Compile Include="VIEW\SelectOptWindow.xaml.cs">
       <DependentUpon>SelectOptWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VIEW\test.xaml.cs">
+      <DependentUpon>test.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -301,6 +304,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="VIEW\SelectOptWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VIEW\test.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

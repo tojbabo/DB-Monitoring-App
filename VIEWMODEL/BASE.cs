@@ -1,4 +1,5 @@
 ﻿using InfluxDB.Client;
+using MONITOR_APP.MODEL;
 using MONITOR_APP.UTILITY;
 using MySql.Data.MySqlClient;
 using System;
@@ -47,9 +48,9 @@ namespace MONITOR_APP.VIEWMODEL
         }
 
         private InfluxDBClient influxDBClient;
-        public InfluxDBClient newClient(string ip, string port, string id, string passwd)
+        public InfluxDBClient newClient()
         {
-            influxDBClient = DB_influx.GetClient(ip, port, id, passwd);
+            influxDBClient = DB_influx.GetClient(dbDetail.ip, dbDetail.port, dbDetail.uid, dbDetail.passwd);
             return influxDBClient;
         }
         public InfluxDBClient getClient()
@@ -58,16 +59,21 @@ namespace MONITOR_APP.VIEWMODEL
             return influxDBClient;
         }
 
+        public DBConnection dbDetail;
+
         private BASE()
         {
             conn = null;
+            dbDetail = new DBConnection();
+            dbDetail.ip = "52.79.127.111";
+            dbDetail.port = "8086";
+            dbDetail.uid = "hsai";
+            dbDetail.passwd = "han401#";
         }
         private void Initalize()
         {
             mv_mainframe = new VM_MainFrame();
             mv_mainpage = new VM_MainPage();
         }
-
-        
     }
 }

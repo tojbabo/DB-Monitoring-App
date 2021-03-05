@@ -1,4 +1,5 @@
-﻿using MONITOR_APP.VIEWMODEL;
+﻿using MONITOR_APP.MODEL;
+using MONITOR_APP.VIEWMODEL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,17 +24,16 @@ namespace MONITOR_APP.VIEW
 
         BASE head;
 
-        public DBConnectWindow(BASE head)
+        public DBConnectWindow()
         {
             InitializeComponent();
 
-            this.head = head;
+            head = BASE.getBASE();
 
-            ip.Text = "52.79.127.111";
-            port.Text = "3306";
-            db.Text = "hansung_db";
-            user.Text = "hansung";
-            passwd.Password = "aidb4231@";
+            ip.Text = head.dbDetail.ip;
+            port.Text = head.dbDetail.port;
+            user.Text = head.dbDetail.uid;
+            passwd.Password = head.dbDetail.passwd;
         }
 
         private void Buton_OK(object sender, RoutedEventArgs e)
@@ -41,7 +41,12 @@ namespace MONITOR_APP.VIEW
             //Console.WriteLine($"{passwd.Password}");        
             try
             {
-                head.newConnect(ip.Text, port.Text, db.Text, user.Text, passwd.Password);
+                head.dbDetail.ip = ip.Text;
+                head.dbDetail.port = port.Text;
+                head.dbDetail.uid = user.Text;
+                head.dbDetail.passwd = passwd.Password;
+
+                head.newClient();
 
                 MessageBox.Show("연결 성공");
             }

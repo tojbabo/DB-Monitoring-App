@@ -62,11 +62,12 @@ namespace MONITOR_APP.UTILITY
         }
         static public async Task<List<FluxTable>> ExcuteInflux(InfluxDBClient client,string query)
         {
-            Console.WriteLine($"[INFLUX] >> {query}");
-            
             List<FluxTable> fluxTable = await client.GetQueryApi().QueryAsync(query, "org_id");
+
+#if DEBUG
+            Console.WriteLine($"[INFLUX] >> {query}");
             Console.WriteLine($"result count is : {fluxTable.Count} * {fluxTable[0].Records.Count}");
-           
+#endif  
 
             client.Dispose();
 
@@ -110,7 +111,7 @@ namespace MONITOR_APP.UTILITY
             }
         }
 
-        #region FLUX QUERY
+#region FLUX QUERY
         static public string GetQuery(SearchData s)
         {
             return $"from(bucket:\"ZIPSAI/autogen\")" +
@@ -150,6 +151,6 @@ namespace MONITOR_APP.UTILITY
 
             return query + " )";
         }
-        #endregion
+#endregion
     }
 }

@@ -20,18 +20,10 @@ namespace MONITOR_APP.MODEL
         public List<DataPoint> set { get; set; }
         public List<DataPoint> cur { get; set; }
         public List<DataPoint> onff { get; set; }
-
+        public List<RectangleAnnotation> Rectangles;
         public bool selected { get; set; }
         public SearchData searches { get; set; }
 
-        // 테스트 프로퍼티
-        public string minday
-        {
-            get
-            {
-                return $"{TimeConverter.GetDate(searches.mintime)}";
-            }
-        }
         public DateTime lilday
         {
             get
@@ -41,13 +33,6 @@ namespace MONITOR_APP.MODEL
             set
             {
                 searches.mintime = ((DateTimeOffset)value).ToUnixTimeSeconds();
-            }
-        }
-        public string maxday
-        { 
-            get
-            {
-                return $"{TimeConverter.GetDate(searches.maxtime)}";
             }
         }
         public DateTime bigday
@@ -61,16 +46,43 @@ namespace MONITOR_APP.MODEL
                 searches.maxtime = ((DateTimeOffset)value).ToUnixTimeSeconds();
             }
         }
-
-        public string mode;
-
-        public List<RectangleAnnotation> Rectangles;
-
-        public int Count { get; set; }
-
-        public bool isComboOpen = false;
-
+        public string title { get; set; }
+        public int Count { 
+            get
+            {
+                return set.Count();
+            }}
         public PlotController plt { get; set; }
+
+
+
+        public double onfftime { get; set; }
+        public TimeSpan onofftime
+        {
+            get
+            {
+                TimeSpan t = new TimeSpan();
+                return TimeSpan.FromSeconds(onfftime);
+            }
+        }
+        public double onffcount { get; set; }
+        public string onffratio { 
+            get
+            {
+                return string.Format("{0:0.0}", (onffcount / onff.Count())*100);
+            }
+            set
+            {
+                onffratio = value;
+            }
+        }
+        public string avgtmp { 
+            get
+            {
+                return string.Format("{0:0.0}", cur.Sum(x => x.Y)/cur.Count());
+            } 
+        }
+
 
         #region 메서드
 
@@ -99,13 +111,12 @@ namespace MONITOR_APP.MODEL
         {
             vm.Axes.Add(new DateTimeAxis()
             {
-                
                 Position = AxisPosition.Bottom,
                 //IsZoomEnabled = false,
                 //IsPanEnabled = false,
 
-                AbsoluteMinimum = set.First().X,
-                AbsoluteMaximum = set.Last().X,
+                AbsoluteMinimum = (set.Count != 0) ? set.First().X : double.MinValue,
+                AbsoluteMaximum = (set.Count != 0) ? set.Last().X : double.MaxValue,
             }) ;
             vm.Axes.Add(new LinearAxis
             {
@@ -118,9 +129,9 @@ namespace MONITOR_APP.MODEL
                 AbsoluteMaximum = 40,
             }) ;
 
-            //vm.Title = $"ROOM {searches.ROOM_ID} [{mode} mode]";
+            title = $"ROOM {searches.ROOM_ID}";
 
-            if (searches.tmp_set) vm.Series.Add(new StairStepSeries
+            if (set.Count!=0) vm.Series.Add(new StairStepSeries
             {
                 //TrackerFormatString = "x={2},\ny={4}",
                 Title = "set",
@@ -130,7 +141,7 @@ namespace MONITOR_APP.MODEL
                 Color = OxyColors.Red,
             });
             
-            if(searches.tmp_cur) vm.Series.Add(new StairStepSeries
+            if(cur.Count!=0) vm.Series.Add(new StairStepSeries
             {
                 Title = "cur",
                 ItemsSource = cur,
@@ -139,7 +150,7 @@ namespace MONITOR_APP.MODEL
                 Color = OxyColors.Black,
             });
             
-            if(searches.on_off) vm.Series.Add(new StairStepSeries
+            if(onff.Count!=0) vm.Series.Add(new StairStepSeries
             {
                 Title = "onff",
                 ItemsSource = onff,
@@ -152,6 +163,7 @@ namespace MONITOR_APP.MODEL
             {
                 vm.Annotations.Add(v);
             }
+
         }
 
         #endregion

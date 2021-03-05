@@ -16,14 +16,15 @@
 
         public double mintime;
         public double maxtime;
-        public double interval { get; set; }
+       // public double interval { get; set; }
 
+        public int index;
        
 
         public double amount;
 
 
-        public SearchData() { mintime = -1; maxtime = -1; }
+        public SearchData() { mintime = -1; maxtime = -1; index = -1; }
     }
 
 }

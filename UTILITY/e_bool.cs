@@ -11,5 +11,8 @@ namespace MONITOR_APP.UTILITY
         manual,
         True,
         False,
+        Single,
+        Multi,
+        Reuse,
     }
 }

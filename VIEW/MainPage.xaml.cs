@@ -100,7 +100,14 @@ namespace MONITOR_APP.VIEW
         {
             vm.Chart_Modify();
         }
+        private void Button_Remove(object sender, RoutedEventArgs e)
+        {
+            var d = sender as Button;
+            var datacontext = d?.DataContext as ChartData;
+            ChartData content = (ChartData)datacontext;
 
+            vm.ChartReset(content);
+        }
         private void ListView_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             var item = (SearchData)listview.SelectedItem;
@@ -116,23 +123,6 @@ namespace MONITOR_APP.VIEW
             if (v == null) return;
 
             vm.RequestSelect(v,this);
-        }
-        private void Graph_RightDown(object sender, MouseButtonEventArgs e)
-        {
-            ListBoxItem listboxitem = FindAncestor<ListBoxItem>
-                                              ((DependencyObject)e.OriginalSource);
-            
-            if (listboxitem == null) return;
-            try
-            {
-                ChartData content = (ChartData)(listboxitem.Content);
-                vm.Vms.Remove(content);
-            }
-            catch(Exception err)
-            {
-                //Console.WriteLine($"{err}");
-                return;
-            }
         }
         private void Graph_DoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -161,26 +151,12 @@ namespace MONITOR_APP.VIEW
             //content.ReFresh();
             //  }
         }
-        // 리스트 박스, 디테일 창 내 체크박스 이벤트
-        private void Checked_Graph(object sender, RoutedEventArgs e)
-        {
-            var c = e.OriginalSource as CheckBox;
-            var datacontext = c?.DataContext as ChartData;
-            ChartData content = (ChartData)datacontext;
-
-            int index = vm.Vms.IndexOf(content);
-
-            vm.Vms.Remove(content);
-            content.ReFresh();
-
-            vm.Vms.Insert(index, content);
-        }
         private void Button_Reload(object sender, RoutedEventArgs e)
         {
             var a = sender as Button;
             var b = (ChartData)a.DataContext;
 
-            Console.WriteLine($"result is : {TimeConverter.GetDate( b.searches.mintime)} - {TimeConverter.GetDate( b.searches.maxtime)} - {b.searches.interval}");
+            vm.Chart_Reload(b);
         }
         #endregion
 
@@ -267,6 +243,7 @@ namespace MONITOR_APP.VIEW
         }
 
         #endregion
+
 
     }
 }

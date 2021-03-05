@@ -21,7 +21,7 @@ namespace MONITOR_APP.VIEW
     /// </summary>
     public partial class SelectOptWindow : Window
     {
-        private bool multicheck = false;
+        private e_bool searchmode;
         private SearchData _searchData;
         private List<SearchData> _searchDatas;
         public SelectOptWindow()
@@ -38,10 +38,9 @@ namespace MONITOR_APP.VIEW
         public DateTime? DataPicker { get; private set; }
 
         #region Event
-
         private void Buton_OK(object sender, RoutedEventArgs e)
         {
-            if (multicheck == false)
+            if (searchmode == e_bool.Single)
             {
                 _searchData.TABLE = TABLE.Text;
                 _searchData.DANJI_ID = ID_DANJI.Text;
@@ -56,11 +55,6 @@ namespace MONITOR_APP.VIEW
                 if (enddatp.SelectedDate != null)
                     _searchData.maxtime = ((DateTimeOffset)enddatp.SelectedDate).ToUnixTimeSeconds();
 
-                if (RadioA.IsChecked == true) _searchData.interval = 0;
-                else if (RadioB.IsChecked == true) _searchData.interval = 1;
-                else if (RadioC.IsChecked == true) _searchData.interval = 2;
-                else if (RadioD.IsChecked == true) _searchData.interval = 3;
-
                 _searchData.amount = Convert.ToDouble(amount.Text);
 
                 _searchData.tmp_set = (bool)SETTMP.IsChecked;
@@ -69,7 +63,7 @@ namespace MONITOR_APP.VIEW
 
                 if (OnChildTextInputEvent != null) OnChildTextInputEvent(_searchData);
             }
-            else
+            else if(searchmode == e_bool.Multi)
             {
                 foreach(var v in _searchDatas)
                 {
@@ -81,11 +75,6 @@ namespace MONITOR_APP.VIEW
                     if (enddatp.SelectedDate != null)
                         v.maxtime = ((DateTimeOffset)enddatp.SelectedDate).ToUnixTimeSeconds();
 
-                    if (RadioA.IsChecked == true) v.interval = 0;
-                    else if (RadioB.IsChecked == true) v.interval = 1;
-                    else if (RadioC.IsChecked == true) v.interval = 2;
-                    else if (RadioD.IsChecked == true) v.interval = 3;
-
                     v.amount = Convert.ToDouble(amount.Text);
 
                     v.tmp_set = (bool)SETTMP.IsChecked;
@@ -93,6 +82,11 @@ namespace MONITOR_APP.VIEW
                     v.on_off = (bool)ONFF.IsChecked;
                 }
                 if (OnChildTextInputEvent != null) OnChildTextInputEvent(_searchDatas);
+            }
+            else if(searchmode == e_bool.Reuse)
+            {
+                string op = $"{((DateTimeOffset)startdap.SelectedDate).ToUnixTimeSeconds()}\\{((DateTimeOffset)enddatp.SelectedDate).ToUnixTimeSeconds()}";
+                if (OnChildTextInputEvent != null) OnChildTextInputEvent(op);
             }
         }
         private void Close(object sender, RoutedEventArgs e)
@@ -106,11 +100,16 @@ namespace MONITOR_APP.VIEW
         }
         public void SetData(SearchData s)
         {
-            multicheck = false;
+            searchmode = e_bool.Single;
+
             ID_DANJI.Text = s.DANJI_ID;
             ID_BUILD.Text = s.BUILD_ID;
             ID_HOUSE.Text = s.HOUSE_ID;
             ID_ROOM.Text = s.ROOM_ID;
+            ID_DANJI.IsEnabled = true;
+            ID_BUILD.IsEnabled = true;
+            ID_HOUSE.IsEnabled = true;
+            ID_ROOM.IsEnabled = true;
 
             min = Convert.ToDouble(s.mintime);
             max = Convert.ToDouble(s.maxtime);
@@ -123,7 +122,13 @@ namespace MONITOR_APP.VIEW
         }
         public void SetData(List<SearchData> searchDatas)
         {
-            multicheck = true;
+            searchmode = e_bool.Multi;
+
+            ID_DANJI.IsEnabled = false;
+            ID_BUILD.IsEnabled = false;
+            ID_HOUSE.IsEnabled = false;
+            ID_ROOM.IsEnabled = false;
+            
             SearchData first = searchDatas[0];
             SearchData last = searchDatas[searchDatas.Count - 1];
 
@@ -136,6 +141,19 @@ namespace MONITOR_APP.VIEW
             enddatp.SelectedDate = DateTime.Now;
 
             _searchDatas = searchDatas;
+        }
+        public void SetData()
+        {
+            searchmode = e_bool.Reuse;
+            ID_DANJI.Text = " - ";
+            ID_DANJI.IsEnabled = false;
+            ID_BUILD.Text = " - ";
+            ID_BUILD.IsEnabled = false;
+            ID_HOUSE.Text = " - ";
+            ID_HOUSE.IsEnabled = false;
+            ID_ROOM.Text = " - ";
+            ID_ROOM.IsEnabled = false;
+
         }
         #endregion
 

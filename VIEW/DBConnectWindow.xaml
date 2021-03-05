@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MONITOR_APP.VIEW" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d" 
-        Height="360.938" Width="292.813" ResizeMode="NoResize" WindowStyle="None" BorderBrush="#FF9baec8" BorderThickness="0.3">
+        Height="330.938" Width="303.313" ResizeMode="NoResize" WindowStyle="None" BorderBrush="#FF9baec8" BorderThickness="0.3">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -40,7 +40,6 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"
@@ -48,10 +47,8 @@
             <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"
                    Text="PORT"/>
             <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"
-                   Text="DB NAME"/>
-            <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"
                    Text="USER"/>
-            <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"
+            <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"
                    Text="PASSWD"/>
 
 
@@ -60,11 +57,9 @@
             <TextBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="20,0,20,0"
                  x:Name="port"/>
             <TextBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="20,0,20,0"
-                 x:Name="db"/>
-            <TextBox Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="20,0,20,0"
                  x:Name="user"/>
 
-            <PasswordBox Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="20,0,20,0"
+            <PasswordBox Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="20,0,20,0"
                  x:Name="passwd"/>
 
         </Grid>

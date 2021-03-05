@@ -58,12 +58,7 @@ namespace MONITOR_APP.VIEW
 
         private void Button_DBConn(object sender, RoutedEventArgs e)
         {
-            // DBConnectWindow DBC = new DBConnectWindow(head);
-            //DBC.Show();
-            //DB_influx.f();
-            vm.test();
-            
-            //head.newConnect("52.79.127.111", "3306", "hansung_db", "hansung", "aidb4231@");
+            vm.DBConnectSetting();
         }
 
 

@@ -40,16 +40,20 @@ namespace MONITOR_APP.VIEWMODEL
 
         #region chart
         // 생성된 모든 CHART를 지우는 함수
-        public void ChartReset()
+        public void ChartReset(ChartData chart = null)
         {
-            Vms.Clear();
+            if (chart == null)
+                Vms.Clear();
+            else
+                Vms.Remove(chart);
         }
         // CHART 생성 함수
-        private async void CreateChart_influx(object opt)
+        private async void CreateChart_influx(object Searchdata)
         {
-            SearchData data = (SearchData)opt;
-            InfluxDBClient client = head.getClient();
+            SearchData data = (SearchData)Searchdata;
+            var chart = new ChartData(); 
 
+            InfluxDBClient client = head.getClient();
             var tables = await DB_influx.ExcuteInflux(client, DB_influx.GetQuery(data));
 
             if (tables.Count == 0)
@@ -58,19 +62,21 @@ namespace MONITOR_APP.VIEWMODEL
                 return;
             }
 
-            var chart = ChartDataInput(tables);
-            chart.searches = data;
 
             Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
             {
-                chart.Drawing();
                 Vms.Add(chart);
+
+                ChartDataInput(ref chart,tables);
+        
+                chart.searches = data;
+                chart.Drawing();
             }));
         }
         // CHART 여러개 동시 생성
-        private void CreateCharts_influx(object opt)
+        private void CreateCharts_influx(object SearchList)
         {
-            List<SearchData> datas = (List<SearchData>)opt;
+            List<SearchData> datas = (List<SearchData>)SearchList;
 
             Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
             {
@@ -82,20 +88,45 @@ namespace MONITOR_APP.VIEWMODEL
                 CreateChart_influx(data);
             }
         }
-        ChartData ChartDataInput(List<FluxTable> tables)
+
+        private async void ReloadChart_influx(object Chartdata)
         {
-            ChartData chart = new ChartData();
+            ChartData chart = (ChartData)Chartdata;
+
+            InfluxDBClient client = head.getClient();
+
+            var tables = await DB_influx.ExcuteInflux(client, DB_influx.GetQuery(chart.searches));
+
+            if (tables.Count == 0)
+            {
+                MessageBox.Show("데이터를 찾을 수 없습니다.");
+                return;
+            }
+
+            ChartDataInput(ref chart, tables);
+
+            int index = Vms.IndexOf(chart);
+            Vms.Remove(chart);
+            chart.ReFresh();
+            Vms.Insert(index, chart);
+        }
+        void ChartDataInput(ref ChartData chart,List<FluxTable> tables)
+        {
             double set, cur, onoff, time;
             int aimode, premode = -1;
-            int datanum = 0;
             double rect = -1;
             time = 0;
-            tables.ForEach(table =>
+            int count = 0;
+            double checker = -1;
+            double unixtime = 0;
+
+            foreach (var table in tables)
             {
-                table.Records.ForEach(cell =>
+                foreach (var cell in table.Records)
                 {
                     Instant inst = (Instant)cell.GetTime();
-                    time = DateTimeAxis.ToDouble(TimeConverter.ConvertTimestamp(inst.ToUnixTimeSeconds()));
+                    unixtime = inst.ToUnixTimeSeconds();
+                    time = DateTimeAxis.ToDouble(TimeConverter.ConvertTimestamp(unixtime));
 
                     string field = cell.GetField();
 
@@ -105,8 +136,7 @@ namespace MONITOR_APP.VIEWMODEL
                         if (!double.IsNaN(set))
                         {
                             chart.set.Add(new DataPoint(time, set / 10));
-                            datanum++;
-                            return;
+                            continue;
                         }
                     }
                     else if (field == "CUR_TEMP")
@@ -115,7 +145,7 @@ namespace MONITOR_APP.VIEWMODEL
                         if (!double.IsNaN(cur))
                         {
                             chart.cur.Add(new DataPoint(time, cur / 10));
-                            return;
+                            continue;
                         }
                     }
                     else if (field == "VALVE_STATUS")
@@ -124,7 +154,23 @@ namespace MONITOR_APP.VIEWMODEL
                         if (!double.IsNaN(onoff))
                         {
                             chart.onff.Add(new DataPoint(time, (onoff == 1) ? 5 : 0));
-                            return;
+                            if (onoff == 1)
+                            {
+                                count++; 
+                                if (checker == -1)
+                                {
+                                    checker = unixtime;
+                                }
+                            }
+                            else if (onoff == 0)
+                            {
+                                if (checker != -1)
+                                {
+                                    chart.onfftime += unixtime - checker;
+                                    checker = -1;
+                                }
+                            }
+                            continue;
                         }
                     }
                     else if (field == "AI_MODE")
@@ -149,7 +195,7 @@ namespace MONITOR_APP.VIEWMODEL
                                 {
                                     chart.Rectangles.Add(new RectangleAnnotation()
                                     {
-                                        
+
                                         Fill = GetColor(premode),
                                         MinimumX = rect,
                                         MaximumX = time,
@@ -161,14 +207,14 @@ namespace MONITOR_APP.VIEWMODEL
                             premode = aimode;
                         }
                     }
-                });
-            });
+                }; 
+            };
+
+            // 그리던 사각형이 끝까지 가는 경우
             if (rect != -1)
             {
                 chart.Rectangles.Add(new RectangleAnnotation()
                 {
-                    
-                    ToolTip = "qwetty",
                     Fill = GetColor(premode),
                     MinimumX = rect,
                     MaximumX = time,
@@ -176,14 +222,63 @@ namespace MONITOR_APP.VIEWMODEL
                 rect = -1;
             }
 
-            chart.Count = datanum;
+            if(checker != -1)
+            {
+                chart.onfftime += unixtime - checker;
+            }
+
+            chart.onffcount = count;
             chart.selected = false;
 
-            return chart;
         }
         public void Chart_Modify()
         {
-            Console.WriteLine("event ok");
+            if (Vms.Count != 0)
+            {
+                if (SOW == null)
+                {
+
+                    SOW = new SelectOptWindow();
+                    SOW.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    SOW.Topmost = true;
+                    SOW.OnChildTextInputEvent += new SelectOptWindow.OnChildTextInputHandler(SOW_OnChildTextInputEvent);
+                    SOW.Show();
+                }
+                else
+                {
+                    SOW.Focus();
+                }
+
+                SOW.SetData();
+            }
+        }
+        public void Chart_Reload(ChartData d)
+        {
+            d.set.Clear();
+            d.cur.Clear();
+            d.onff.Clear();
+            d.Rectangles.Clear();
+
+            ReloadChart_influx(d);
+        }
+        public void Chart_Reload(object time)
+        {
+            var times = Convert.ToString(time).Split('\\');
+            foreach (var v in Vms)
+            {
+                v.searches.mintime = Convert.ToDouble(times[0]);
+                v.searches.maxtime = Convert.ToDouble(times[1]);
+
+
+                v.set.Clear();
+                v.cur.Clear();
+                v.onff.Clear();
+                v.Rectangles.Clear();
+                Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                {
+                    ReloadChart_influx(v);
+                }));
+            }
         }
         #endregion
         
@@ -254,7 +349,6 @@ namespace MONITOR_APP.VIEWMODEL
         {
             if (SOW == null)
             {
-
                 SOW = new SelectOptWindow();
                 SOW.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 SOW.Topmost = true;
@@ -293,6 +387,11 @@ namespace MONITOR_APP.VIEWMODEL
                 else if (Parameters is List<SearchData>)
                 {
                     Thread t = new Thread(new ParameterizedThreadStart(CreateCharts_influx));
+                    t.Start(Parameters);
+                }
+                else if (Parameters is string)
+                {
+                    Thread t = new Thread(new ParameterizedThreadStart(Chart_Reload));
                     t.Start(Parameters);
                 }
                 //CreateChart(options);

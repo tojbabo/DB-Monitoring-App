@@ -89,18 +89,9 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <Grid Height="40" PreviewMouseLeftButtonDown="Graph_LeftDown">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" Content="onoff 비율" VerticalAlignment="Center"/>
-                                <Label Grid.Column="1" Content="valve on 시간" VerticalAlignment="Center"/>
-                                <Label Grid.Column="2" Content="설정온도 평균" VerticalAlignment="Center"/>
-
+                            <Grid Height="40" PreviewMouseLeftButtonDown="Graph_LeftDown" HorizontalAlignment="Stretch" Background="White">
+                                <Label Content="{Binding title}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                       FontSize="25"/>
                             </Grid>
                             <oxys:PlotView 
                                 Height="300" MinWidth="{Binding ActualWidth, ElementName=listgrid, Converter={util:WidthConverter},ConverterParameter='0.482'}"
@@ -110,6 +101,30 @@
                                 <!-- 
                                 MouseRightButtonDown="Graph_RightDown"-->
                             </oxys:PlotView>
+                            <Grid Height="40" Background="#383A3F">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="동작 시간" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
+                                <TextBlock Grid.Column="0" Text="{Binding onofftime}" VerticalAlignment="Center" Foreground="#F6B352" FontSize="15" Margin="80,0,0,0"/>
+
+                                <TextBlock Grid.Column="1" Text="동작 비율" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
+                                <TextBlock Grid.Column="1" Text="{Binding onffratio}" VerticalAlignment="Center" Foreground="#F6B352" FontSize="15" Margin="80,0,0,0"/>
+
+                                <TextBlock Grid.Column="2" Text="평균 온도" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
+                                <TextBlock Grid.Column="2" Text="{Binding avgtmp}" VerticalAlignment="Center" Foreground="#F6B352" FontSize="15" Margin="80,0,0,0"/>
+
+                                <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Grid.Column="5" HorizontalAlignment="Right" Margin="5"
+                                            Width="25" Height="25" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_Remove">
+                                    <materialDesign:PackIcon Kind="Close"/>
+                                </Button>
+                                
+                            </Grid>
                             <Grid Visibility="{Binding selected, Converter={StaticResource converter}}" 
                                   Background="#383A3F" Height="80" x:Name="Grid_detail"  >
                                 <Grid.RowDefinitions>
@@ -123,62 +138,43 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Column="0" Text="단지번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
-                                    <TextBlock Grid.Column="1" Text="건물번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
-                                    <TextBlock Grid.Column="2" Text="집 번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
-                                    <TextBlock Grid.Column="3" Text="방 번호" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
-                                    <TextBlock Grid.Column="4" Text="데이터" VerticalAlignment="Center" Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
+                                    <TextBlock Grid.Column="0" Text="단지" VerticalAlignment="Center"  Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12" />
+                                    <TextBlock Grid.Column="1" Text="건물" VerticalAlignment="Center"  Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
+                                    <TextBlock Grid.Column="2" Text=" 집 " VerticalAlignment="Center"  Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
+                                    <TextBlock Grid.Column="3" Text=" 방 " VerticalAlignment="Center"  Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
+                                    <TextBlock Grid.Column="4" Text="개수" VerticalAlignment="Center"  Foreground="#FFd9e1e8" Margin="10,0,0,0" FontSize="12"/>
 
-                                    <TextBlock Grid.Column="0" Text="{Binding searches.DANJI_ID }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding searches.BUILD_ID }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
-                                    <TextBlock Grid.Column="2" Text="{Binding searches.HOUSE_ID }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
-                                    <TextBlock Grid.Column="3" Text="{Binding searches.ROOM_ID }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
-                                    <TextBlock Grid.Column="4" Text="{Binding Count }" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#F6B352" Margin="10,0,0,0" FontSize="15"/>
+                                    <TextBlock Grid.Column="0" Text="{Binding searches.DANJI_ID }" VerticalAlignment="Center" Foreground="#F6B352" Margin="60,0,0,0" FontSize="15"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding searches.BUILD_ID }" VerticalAlignment="Center" Foreground="#F6B352" Margin="60,0,0,0" FontSize="15"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding searches.HOUSE_ID }" VerticalAlignment="Center" Foreground="#F6B352" Margin="60,0,0,0" FontSize="15"/>
+                                    <TextBlock Grid.Column="3" Text="{Binding searches.ROOM_ID }" VerticalAlignment="Center" Foreground="#F6B352" Margin="60,0,0,0" FontSize="15"/>
+                                    <TextBlock Grid.Column="4" Text="{Binding Count }" VerticalAlignment="Center"  Foreground="#F6B352" Margin="60,0,0,0" FontSize="15"/>
 
                                 </Grid>
                                 <Grid Grid.Row="1">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="6*"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="35"/>
                                     </Grid.ColumnDefinitions>
-                                    <!--
-                    <CheckBox Grid.Column="0" Content="현재 온도" Foreground="#FFd9e1e8" IsChecked="{Binding searches.tmp_cur}" 
-                                              Checked="_Check_Graph" Unchecked="_Check_Graph" Background="#F6B352" Margin="30,0,0,0" FontSize="12"/>
-                    <CheckBox Grid.Column="1" Content="목표 온도" Foreground="#FFd9e1e8" IsChecked="{Binding searches.tmp_set}" 
-                                              Checked="_Check_Graph" Unchecked="_Check_Graph" Background="#F6B352" Margin="30,0,0,0" FontSize="12"/>
-                    <CheckBox Grid.Column="2" Content="기기 ON/OFF" Foreground="#FFd9e1e8" IsChecked="{Binding searches.on_off}" 
-                                              Checked="_Check_Graph" Unchecked="_Check_Graph" Background="#F6B352" Margin="30,0,0,0" FontSize="12"/>
--->
 
-                                    <DatePicker Grid.Column="3" SelectedDate="{Binding lilday}" Foreground="#FFd9e1e8" Margin="10,0,10,0" FontSize="12"/>
-                                    <DatePicker Grid.Column="4" SelectedDate="{Binding bigday}" Foreground="#FFd9e1e8" Margin="10,0,10,0" FontSize="12"/>
+                                    <DatePicker Grid.Column="1" SelectedDate="{Binding lilday}" Foreground="#FFd9e1e8" Margin="10,0,10,0" FontSize="12"/>
+                                    <DatePicker Grid.Column="2" SelectedDate="{Binding bigday}" Foreground="#FFd9e1e8" Margin="10,0,10,0" FontSize="12"/>
 
-                                    <ComboBox x:Name="combo_interval" Grid.Column="5" FontSize="12" Foreground="#F6B352" SelectedIndex="{Binding searches.interval}" Margin="10,0,10,0"
-                                              VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                                        <ComboBoxItem Content="6"/>
-                                        <ComboBoxItem Content="30"/>
-                                        <ComboBoxItem Content="60"/>
-                                        <ComboBoxItem Content="360"/>
-                                    </ComboBox>
-
-                                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Grid.Column="6"
+                                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Grid.Column="3"
                                             Width="25" Height="25" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}"
                                             Click="Button_Reload">
-                                        <materialDesign:PackIcon Kind="Close"/>
+                                        <materialDesign:PackIcon Kind="Sync"/>
                                     </Button>
 
 
 
                                 </Grid>
                             </Grid>
-
                         </StackPanel>
                     </DataTemplate>
 

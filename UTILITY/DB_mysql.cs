@@ -178,10 +178,10 @@ namespace MONITOR_APP.UTILITY
             sql += (s.mintime == 0) ? "" : $" AND TIME > {s.mintime}";
             sql += (s.maxtime == 0) ? "" : $" AND TIME < {s.maxtime}";
             int interv = 0;
-            if (s.interval == 0) interv = 6;
+            /*if (s.interval == 0) interv = 6;
             else if (s.interval == 1) interv = 30;
             else if (s.interval == 2) interv = 60;
-            else if (s.interval == 3) interv = 360;
+            else if (s.interval == 3) interv = 360;*/
 
             sql += (interv == 0) ? "" : $" AND mod(substr(TIME, 7, 3),{interv}) <= 2";
 
