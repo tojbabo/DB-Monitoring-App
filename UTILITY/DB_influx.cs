@@ -62,12 +62,13 @@ namespace MONITOR_APP.UTILITY
         }
         static public async Task<List<FluxTable>> ExcuteInflux(InfluxDBClient client,string query)
         {
-            List<FluxTable> fluxTable = await client.GetQueryApi().QueryAsync(query, "org_id");
-
 #if DEBUG
             Console.WriteLine($"[INFLUX] >> {query}");
-            Console.WriteLine($"result count is : {fluxTable.Count} * {fluxTable[0].Records.Count}");
-#endif  
+#endif
+            List<FluxTable> fluxTable = await client.GetQueryApi().QueryAsync(query, "org_id");
+#if DEBUG
+            Console.WriteLine($"result count is : {fluxTable.Count} * {fluxTable.FirstOrDefault()?.Records.Count}");
+#endif
 
             client.Dispose();
 
@@ -134,6 +135,15 @@ namespace MONITOR_APP.UTILITY
                 $" |> filter(fn: (r)=> r._measurement == \"sensor_data\")" +
                 $" |> filter(fn: (r)=> r.DANJI_ID != \"0\" and r.BUILD_ID != \"0\" and r.HOUSE_ID != \"0\")" +
                 $" |> distinct(column: \"VALVE_STATUS\")";
+        }
+        static public string GetQuery_Group(SearchData s)
+        {
+
+            return $"from(bucket:\"ZIPSAI/autogen\")" +
+                $" |> range(start: {s.mintime})" +
+                $" |> filter(fn: (r)=> r._measurement == \"{s.TABLE}\")" +
+                MakeQuery_Filter(s) +
+                $" |> window(every: 1h, period: 30s)";
         }
         static private string MakeQuery_Filter(SearchData s)
         {

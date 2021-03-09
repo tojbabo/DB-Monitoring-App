@@ -61,21 +61,35 @@
 
 
 
-            <Button Grid.Column="3" 
-                        Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_DBConn">
-                <materialDesign:PackIcon Kind="DatabaseCheck" Margin="0" Width="auto" Height="auto"/>
-            </Button>
             <Button Grid.Column="4"
-                        Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_Tiling">
-                <materialDesign:PackIcon Kind="Apps" Margin="0" Width="auto" Height="auto"/>
+                        Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_Menu">
+                <materialDesign:PackIcon Kind="Menu" Margin="0" Width="auto" Height="auto"/>
             </Button>
 
         </Grid>
 
-
-        <Grid x:Name="Grid_Opt" Margin="893,0,0,507" Grid.Row="2" Background="Black"/>
-
         <Frame Grid.Row="2" Name="Page"/>
+
+        <Grid x:Name="Grid_Opt" Width="auto" Height="auto" HorizontalAlignment="Right" VerticalAlignment="Top" 
+              Grid.Row="2" Background="#383A3F" Visibility="Hidden"
+              MaxWidth="240" Opacity="0.7">
+            <WrapPanel>
+                <Button
+                        Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_DBConn">
+                    <materialDesign:PackIcon Kind="DatabaseCheck" Width="35" Height="35"/>
+                </Button>
+                <Button
+                        Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_Tiling">
+                    <materialDesign:PackIcon Kind="Apps" Width="35" Height="35"/>
+                </Button>
+                <Button
+                        Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_Save">
+                    <materialDesign:PackIcon Kind="ContentSave" Width="35" Height="35"/>
+                </Button>
+
+            </WrapPanel>
+        </Grid>
+
 
 
     </Grid>

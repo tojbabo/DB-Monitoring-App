@@ -37,12 +37,12 @@ namespace MONITOR_APP.UTILITY
         {
             double d = Convert.ToDouble(timestamp);
             var val = TimeConverter.ConvertTimestamp(d);
-            return $"{val.Year}/{val.Month}/{val.Day}";
+            return $"{val.Year}.{val.Month}.{val.Day}";
         }
         public static string GetDate(double timestamp)
         {
             var val = TimeConverter.ConvertTimestamp(timestamp);
-            return $"{val.Year}/{val.Month}/{val.Day}";
+            return $"{val.Year}.{val.Month}.{val.Day}";
         }
 
 

@@ -243,6 +243,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UTILITY\CSV_Stream.cs" />
     <Compile Include="UTILITY\DB_influx.cs" />
     <Compile Include="UTILITY\DB_mysql.cs" />
     <Compile Include="UTILITY\e_bool.cs" />
@@ -335,6 +336,45 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\zips_remove.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Libs\BouncyCastle.Crypto.dll" />
+    <EmbeddedResource Include="Libs\CsvHelper.dll" />
+    <EmbeddedResource Include="Libs\Google.Protobuf.dll" />
+    <EmbeddedResource Include="Libs\InfluxDB.Client.Core.dll" />
+    <EmbeddedResource Include="Libs\InfluxDB.Client.dll" />
+    <EmbeddedResource Include="Libs\JsonSubTypes.dll" />
+    <EmbeddedResource Include="Libs\K4os.Compression.LZ4.dll" />
+    <EmbeddedResource Include="Libs\K4os.Compression.LZ4.Streams.dll" />
+    <EmbeddedResource Include="Libs\K4os.Hash.xxHash.dll" />
+    <EmbeddedResource Include="Libs\MaterialDesignColors.dll" />
+    <EmbeddedResource Include="Libs\MaterialDesignThemes.Wpf.dll" />
+    <EmbeddedResource Include="Libs\Microsoft.Bcl.AsyncInterfaces.dll" />
+    <EmbeddedResource Include="Libs\Microsoft.Extensions.ObjectPool.dll" />
+    <EmbeddedResource Include="Libs\Microsoft.Extensions.Primitives.dll" />
+    <EmbeddedResource Include="Libs\Microsoft.Net.Http.Headers.dll" />
+    <EmbeddedResource Include="Libs\MySql.Data.dll" />
+    <EmbeddedResource Include="Libs\Newtonsoft.Json.dll" />
+    <EmbeddedResource Include="Libs\NodaTime.dll" />
+    <EmbeddedResource Include="Libs\NodaTime.Serialization.JsonNet.dll" />
+    <EmbeddedResource Include="Libs\OxyPlot.dll" />
+    <EmbeddedResource Include="Libs\OxyPlot.Wpf.dll" />
+    <EmbeddedResource Include="Libs\Renci.SshNet.dll" />
+    <EmbeddedResource Include="Libs\RestSharp.dll" />
+    <EmbeddedResource Include="Libs\System.Buffers.dll" />
+    <EmbeddedResource Include="Libs\System.Collections.Immutable.dll" />
+    <EmbeddedResource Include="Libs\System.Configuration.ConfigurationManager.dll" />
+    <EmbeddedResource Include="Libs\System.Memory.dll" />
+    <EmbeddedResource Include="Libs\System.Numerics.Vectors.dll" />
+    <EmbeddedResource Include="Libs\System.Reactive.dll" />
+    <EmbeddedResource Include="Libs\System.Runtime.CompilerServices.Unsafe.dll" />
+    <EmbeddedResource Include="Libs\System.Security.AccessControl.dll" />
+    <EmbeddedResource Include="Libs\System.Security.Permissions.dll" />
+    <EmbeddedResource Include="Libs\System.Security.Principal.Windows.dll" />
+    <EmbeddedResource Include="Libs\System.Threading.Tasks.Extensions.dll" />
+    <EmbeddedResource Include="Libs\System.ValueTuple.dll" />
+    <EmbeddedResource Include="Libs\Ubiety.Dns.Core.dll" />
+    <EmbeddedResource Include="Libs\Zstandard.Net.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" />

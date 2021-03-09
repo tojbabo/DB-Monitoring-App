@@ -85,13 +85,18 @@ namespace MONITOR_APP.VIEW
         }
         private void Button_Tiling(object sender, RoutedEventArgs e)
         {
-            if (Grid_Opt.Visibility == Visibility.Visible) Grid_Opt.Visibility = Visibility.Collapsed;
-
-            else Grid_Opt.Visibility = Visibility.Visible;
-            
-            //mp.Tiling();
+            mp.Tiling();
         }
 #endregion
 
+        private void Button_Menu(object sender, RoutedEventArgs e)
+        {
+            Grid_Opt.Visibility = Grid_Opt.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+        }
+
+        private void Button_Save(object sender, RoutedEventArgs e)
+        {
+            head.getMV_MainPage().save();
+        }
     }
 }

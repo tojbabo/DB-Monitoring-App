@@ -53,11 +53,11 @@ namespace MONITOR_APP.VIEWMODEL
             var chart = new ChartData(); 
 
             InfluxDBClient client = head.getClient();
-            var tables = await DB_influx.ExcuteInflux(client, DB_influx.GetQuery(data));
+            var tables = await DB_influx.ExcuteInflux(client, DB_influx.GetQuery_Group(data));
 
             if (tables.Count == 0)
             {
-                MessageBox.Show("데이터를 찾을 수 없습니다.");
+                MessageBox.Show($"[ROOM:{data.ROOM_ID}] 데이터를 찾을 수 없습니다.");
                 return;
             }
 
@@ -123,6 +123,7 @@ namespace MONITOR_APP.VIEWMODEL
             {
                 foreach (var cell in table.Records)
                 {
+                    Console.WriteLine($"[{cell.GetTime()}] {cell.GetField()}:{cell.GetValue()}");
                     Instant inst = (Instant)cell.GetTime();
                     unixtime = inst.ToUnixTimeSeconds();
                     time = DateTimeAxis.ToDouble(TimeConverter.ConvertTimestamp(unixtime));
@@ -465,6 +466,14 @@ namespace MONITOR_APP.VIEWMODEL
                 return OxyColor.FromArgb(50, 0, 0, 90);
 
             return OxyColors.Undefined;
+        }
+
+        public void save()
+        {
+            foreach (var v in Vms)
+            {
+                CSV_Stream.CSV_Write(v);
+            }
         }
 
     }
