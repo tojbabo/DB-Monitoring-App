@@ -50,10 +50,11 @@ namespace MONITOR_APP.VIEWMODEL
         private async void CreateChart_influx(object Searchdata)
         {
             SearchData data = (SearchData)Searchdata;
-            var chart = new ChartData(); 
+            var chart = new ChartData(head.val); 
 
             InfluxDBClient client = head.getClient();
-            var tables = await DB_influx.ExcuteInflux(client, DB_influx.GetQuery_Group(data));
+            //var tables = await DB_influx.ExcuteInflux(client, DB_influx.GetQuery_Group(data));
+            var tables = await DB_influx.ExcuteInflux(client, DB_influx.GetQuery(data));
 
             if (tables.Count == 0)
             {
@@ -67,8 +68,8 @@ namespace MONITOR_APP.VIEWMODEL
                 Vms.Add(chart);
 
                 ChartDataInput(ref chart,tables);
-        
-                chart.searches = data;
+
+                chart.searches = new SearchData(data);
                 chart.Drawing();
             }));
         }
@@ -91,6 +92,13 @@ namespace MONITOR_APP.VIEWMODEL
         private async void ReloadChart_influx(object Chartdata)
         {
             ChartData chart = (ChartData)Chartdata;
+
+            chart.set.Clear();
+            chart.cur.Clear();
+            chart.onff.Clear();
+            chart.Rectangles.Clear();
+
+            chart.onfftime = 0;
 
             InfluxDBClient client = head.getClient();
 
@@ -123,10 +131,10 @@ namespace MONITOR_APP.VIEWMODEL
             {
                 foreach (var cell in table.Records)
                 {
-                    Console.WriteLine($"[{cell.GetTime()}] {cell.GetField()}:{cell.GetValue()}");
+                    //Console.WriteLine($"[{cell.GetTime()}] {cell.GetField()}:{cell.GetValue()}");
                     Instant inst = (Instant)cell.GetTime();
                     unixtime = inst.ToUnixTimeSeconds();
-                    time = DateTimeAxis.ToDouble(TimeConverter.ConvertTimestamp(unixtime));
+                    time = DateTimeAxis.ToDouble(TimeConverter.ConvertTimestamp(unixtime - 32400)) ;
 
                     string field = cell.GetField();
 
@@ -141,6 +149,7 @@ namespace MONITOR_APP.VIEWMODEL
                     }
                     else if (field == "CUR_TEMP")
                     {
+                        //Console.WriteLine($"[{cell.GetTime()}] {cell.GetField()}:{cell.GetValue()}");
                         cur = DB_influx.GetData(cell, "CUR_TEMP");
                         if (!double.IsNaN(cur))
                         {
@@ -153,7 +162,7 @@ namespace MONITOR_APP.VIEWMODEL
                         onoff = DB_influx.GetData(cell, "VALVE_STATUS");
                         if (!double.IsNaN(onoff))
                         {
-                            chart.onff.Add(new DataPoint(time, (onoff == 1) ? 5 : 0));
+                            chart.onff.Add(new DataPoint(time, (onoff == 1) ? chart.onvalue : chart.offvalue));
                             if (onoff == 1)
                             {
                                 count++; 
@@ -169,7 +178,7 @@ namespace MONITOR_APP.VIEWMODEL
                                     chart.onfftime += unixtime - checker;
                                     checker = -1;
                                 }
-                            }
+                            }   
                             continue;
                         }
                     }
@@ -254,11 +263,6 @@ namespace MONITOR_APP.VIEWMODEL
         }
         public void Chart_Reload(ChartData d)
         {
-            d.set.Clear();
-            d.cur.Clear();
-            d.onff.Clear();
-            d.Rectangles.Clear();
-
             ReloadChart_influx(d);
         }
         public void Chart_Reload(object time)
@@ -269,15 +273,22 @@ namespace MONITOR_APP.VIEWMODEL
                 v.searches.mintime = Convert.ToDouble(times[0]);
                 v.searches.maxtime = Convert.ToDouble(times[1]);
 
-
-                v.set.Clear();
-                v.cur.Clear();
-                v.onff.Clear();
-                v.Rectangles.Clear();
                 Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
                 {
                     ReloadChart_influx(v);
                 }));
+            }
+        }
+        public void Chart_Reload()
+        {
+            foreach(ChartData d in Vms)
+            {
+                d.ymax = head.val.AXISYMAX;
+                d.ymin = head.val.AXISYMIN;
+                d.onvalue = head.val.ONVALUE;
+                d.offvalue = head.val.OFFVALUE;
+
+                ReloadChart_influx(d);
             }
         }
         #endregion

@@ -73,18 +73,22 @@
         <Grid x:Name="Grid_Opt" Width="auto" Height="auto" HorizontalAlignment="Right" VerticalAlignment="Top" 
               Grid.Row="2" Background="#383A3F" Visibility="Hidden"
               MaxWidth="240" Opacity="0.7">
-            <WrapPanel>
-                <Button
-                        Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_DBConn">
-                    <materialDesign:PackIcon Kind="DatabaseCheck" Width="35" Height="35"/>
-                </Button>
+            <WrapPanel Orientation="Horizontal" FlowDirection="RightToLeft" >
                 <Button
                         Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_Tiling">
-                    <materialDesign:PackIcon Kind="Apps" Width="35" Height="35"/>
+                    <materialDesign:PackIcon Kind="Apps" Width="40" Height="40"/>
+                </Button>
+                <Button
+                        Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_DBConn">
+                    <materialDesign:PackIcon Kind="DatabaseCheck" Width="40" Height="40"/>
+                </Button>
+                <Button
+                        Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_GraphSet">
+                    <materialDesign:PackIcon Kind="Gear" Width="40" Height="40"/>
                 </Button>
                 <Button
                         Width="auto" Height="auto" Foreground="White" BorderBrush="{x:Null}" Background="{x:Null}" Click="Button_Save">
-                    <materialDesign:PackIcon Kind="ContentSave" Width="35" Height="35"/>
+                    <materialDesign:PackIcon Kind="ContentSave" Width="40" Height="40"/>
                 </Button>
 
             </WrapPanel>

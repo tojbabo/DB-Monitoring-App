@@ -116,7 +116,7 @@ namespace MONITOR_APP.UTILITY
         static public string GetQuery(SearchData s)
         {
             return $"from(bucket:\"ZIPSAI/autogen\")" +
-                $" |> range(start: {s.mintime},stop: {s.maxtime})" +
+                $" |> range(start: {s.mintime + 32400},stop: {s.maxtime+ 32400})" +
                 $" |> filter(fn: (r)=> r._measurement == \"{s.TABLE}\")" +
                 MakeQuery_Filter(s) +
                 $" |> limit(n: {s.amount})";

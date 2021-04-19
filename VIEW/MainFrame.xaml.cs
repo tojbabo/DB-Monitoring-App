@@ -97,6 +97,12 @@ namespace MONITOR_APP.VIEW
         private void Button_Save(object sender, RoutedEventArgs e)
         {
             head.getMV_MainPage().save();
+            
+        }
+
+        private void Button_GraphSet(object sender, RoutedEventArgs e)
+        {
+            vm.StaticValueSetting();
         }
     }
 }

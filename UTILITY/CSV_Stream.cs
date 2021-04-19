@@ -1,4 +1,5 @@
 ﻿using MONITOR_APP.MODEL;
+using MONITOR_APP.VIEWMODEL;
 using OxyPlot.Axes;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace MONITOR_APP.UTILITY
         static private string _path = @"output";
         static public void CSV_Write(ChartData chart)
         {
+           
             DirectoryInfo dir = new DirectoryInfo(_path);
             if (dir.Exists == false)
             {
@@ -31,11 +33,12 @@ namespace MONITOR_APP.UTILITY
                 double cur, set;
                 bool onff;
                 stream.WriteLine("CUR_TEMP,SET_TEMP,VAVLE_STATUS,TIME");
+                int flag = BASE.getBASE().val.ONVALUE;
                 for (int i = 0; i < chart.set.Count; i++)
                 {
                     cur = chart.cur[i].Y;
                     set = chart.set[i].Y;
-                    onff = (chart.onff[i].Y == 5) ? true : false;
+                    onff = (chart.onff[i].Y == flag) ? true : false;
                     time = DateTimeAxis.ToDateTime(chart.cur[i].X).ToString();
                     try
                     {

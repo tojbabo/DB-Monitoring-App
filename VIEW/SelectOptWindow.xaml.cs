@@ -151,5 +151,9 @@ namespace MONITOR_APP.VIEW
         }
         #endregion
 
+        private void DateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            enddatp.SelectedDate = startdap.SelectedDate.Value.AddDays(1);
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace MONITOR_APP.VIEWMODEL
 {
     public class VM_MainFrame
     {
+        StaticSetWindow SSW;
         BASE head;
         public VM_MainFrame()
         {
@@ -39,5 +40,23 @@ namespace MONITOR_APP.VIEWMODEL
             public static extern bool AllocConsole();
         }
 #endif
+
+        public void StaticValueSetting()
+        {
+            SSW = new StaticSetWindow();
+            SSW.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            SSW.Topmost = true;
+            SSW.OnChildTextInputEvent += new StaticSetWindow.OnChildTextInputHandler(SSW_ChildEvent);
+            SSW.Show();
+        }
+
+        private void SSW_ChildEvent(object p)
+        {
+            SSW.Close();
+            SSW.OnChildTextInputEvent -= new StaticSetWindow.OnChildTextInputHandler(SSW_ChildEvent);
+            SSW = null;
+
+            head.getMV_MainPage().Chart_Reload();
+        }
     }
 }

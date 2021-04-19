@@ -61,6 +61,8 @@ namespace MONITOR_APP.VIEWMODEL
 
         public DBConnection dbDetail;
 
+        public StaticValue val { get; private set; }
+
         private BASE()
         {
             conn = null;
@@ -69,6 +71,8 @@ namespace MONITOR_APP.VIEWMODEL
             dbDetail.port = "8086";
             dbDetail.uid = "hsai";
             dbDetail.passwd = "han401#";
+
+            val = new StaticValue();
         }
         private void Initalize()
         {

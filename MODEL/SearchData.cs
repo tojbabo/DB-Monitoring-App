@@ -21,6 +21,18 @@
 
 
         public SearchData() { mintime = -1; maxtime = -1; index = -1; }
+        public SearchData(SearchData d)
+        {
+            TABLE = d.TABLE;
+            DANJI_ID = d.DANJI_ID;
+            BUILD_ID = d.BUILD_ID;
+            HOUSE_ID = d.HOUSE_ID;
+            ROOM_ID = d.ROOM_ID;
+            mintime = d.mintime;
+            maxtime = d.maxtime;
+            index = d.index;
+            amount = d.amount;
+        }
     }
 
 }

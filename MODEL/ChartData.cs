@@ -16,14 +16,28 @@ namespace MONITOR_APP.MODEL
 {
     public class ChartData
     {
+        #region 그래프 그리기
+        // 그래프 자체 MODEL
         public PlotModel vm { get; set; }
+        // 그래프 타이틀
+        public string title { get; set; }
+        // 설정 온도 그래프 데이터 (X, Y)
         public List<DataPoint> set { get; set; }
+        // 현재 온도 그래프 데이터 (X, Y)
         public List<DataPoint> cur { get; set; }
+        // 벨브 ON/OFF 그래프 데이터 (X, Y)
         public List<DataPoint> onff { get; set; }
+        // 조절기 MODE별 영역 지정
         public List<RectangleAnnotation> Rectangles;
-        public bool selected { get; set; }
-        public SearchData searches { get; set; }
+        
+        // 그래프 마우스 특정 지점 세부 데이터 출력 model
+        public PlotController plt { get; set; }
+        #endregion
 
+        #region 그래프 세부 사항
+        // 그래프 검색 조건 
+        public SearchData searches { get; set; }
+        // 검색 시간(유닉스 시간)을 시:분:초 형식으로 변환 가져옴, 반대 셋팅 :: 실 데이터는 searches에 존재
         public DateTime lilday
         {
             get
@@ -46,17 +60,19 @@ namespace MONITOR_APP.MODEL
                 searches.maxtime = ((DateTimeOffset)value).ToUnixTimeSeconds();
             }
         }
-        public string title { get; set; }
-        public int Count { 
+        // 그래프 내 데이터 개수
+        public int Count
+        {
             get
             {
                 return set.Count();
-            }}
-        public PlotController plt { get; set; }
-
-
-
+            }
+        }
+        // 해당 그래프 선택됨(안됨) - 그래프 내 숨겨진 그리드 출력 여부 
+        public bool selected { get; set; }
+        // 벨브 개방시간 총합
         public double onfftime { get; set; }
+        // 벨브 총 개방 시간 시분초 형식 변환
         public TimeSpan onofftime
         {
             get
@@ -64,7 +80,9 @@ namespace MONITOR_APP.MODEL
                 return TimeSpan.FromSeconds(onfftime);
             }
         }
+        // 벨브 개방 개수 
         public double onffcount { get; set; }
+        // 벨브 개방 비율
         public string onffratio { 
             get
             {
@@ -75,6 +93,7 @@ namespace MONITOR_APP.MODEL
                 onffratio = value;
             }
         }
+        // 평균 기온
         public string avgtmp { 
             get
             {
@@ -82,16 +101,35 @@ namespace MONITOR_APP.MODEL
             } 
         }
 
+        #endregion
+
+        #region 그래프 설정 데이터
+        public int ymin;
+        public int ymax;
+
+        public int onvalue;
+        public int offvalue;
+        #endregion
 
         #region 메서드
 
-        public ChartData()
+        public ChartData(StaticValue sv)
         {
             plt = new PlotController();
             //plt.UnbindAll();
 
+            ymin = sv.AXISYMIN;
+            ymax = sv.AXISYMAX;
+            onvalue = sv.ONVALUE;
+            offvalue = sv.OFFVALUE;
 
-            vm = new PlotModel();
+
+            vm = new PlotModel()
+            {
+                LegendPlacement = LegendPlacement.Outside,
+                LegendPosition = LegendPosition.TopCenter,
+                LegendOrientation = LegendOrientation.Horizontal,
+            };
             set = new List<DataPoint>();
             cur = new List<DataPoint>();
             onff = new List<DataPoint>();
@@ -102,7 +140,12 @@ namespace MONITOR_APP.MODEL
         public void ReFresh()
         {
             vm.Annotations.Clear();
-            vm = new PlotModel();
+            vm = new PlotModel()
+            {
+                LegendPlacement = LegendPlacement.Outside,
+                LegendPosition = LegendPosition.TopCenter,
+                LegendOrientation = LegendOrientation.Horizontal,
+            };
             Drawing();
         }
 
@@ -122,39 +165,38 @@ namespace MONITOR_APP.MODEL
                 Position = AxisPosition.Left,
                 //IsZoomEnabled = false,
                 //IsPanEnabled = false,
-                Minimum = -5,
-                Maximum = 40,
-                AbsoluteMinimum = -5,
-                AbsoluteMaximum = 40,
+                Minimum = ymin,
+                Maximum = ymax,
+                AbsoluteMinimum = ymin,
+                AbsoluteMaximum = ymax,
             }) ;
 
             title = $"ROOM {searches.ROOM_ID}";
 
-            if (set.Count!=0) vm.Series.Add(new StairStepSeries
+            if(cur.Count!=0) vm.Series.Add(new LineSeries
             {
-                //TrackerFormatString = "x={2},\ny={4}",
-                Title = "set",
-                ItemsSource = set,
-                StrokeThickness = 2,
-                LineStyle = LineStyle.Solid,
-                Color = OxyColors.Red,
-            });
-            
-            if(cur.Count!=0) vm.Series.Add(new StairStepSeries
-            {
-                Title = "cur",
+                TrackerFormatString = "{0}\n온도: {4}℃\n시간: {2}",
+                Title = "현재 온도",
                 ItemsSource = cur,
                 StrokeThickness = 2,
-                LineStyle = LineStyle.Solid,
                 Color = OxyColors.Black,
+            });
+
+            if (set.Count != 0) vm.Series.Add(new StairStepSeries
+            {
+                TrackerFormatString = "{0}\n온도: {4}℃\n시간: {2}",
+                Title = "설정 온도",
+                ItemsSource = set,
+                StrokeThickness = 2,
+                Color = OxyColors.Red,
             });
             
             if(onff.Count!=0) vm.Series.Add(new StairStepSeries
             {
-                Title = "onff",
+                TrackerFormatString = "{0}\n시간: {2}",
+                Title = "벨브 상태",
                 ItemsSource = onff,
                 StrokeThickness = 2,
-                LineStyle = LineStyle.Solid,
                 Color = OxyColors.Green,
             });
 
