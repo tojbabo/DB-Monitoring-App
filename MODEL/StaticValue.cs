@@ -8,10 +8,10 @@ namespace MONITOR_APP.MODEL
 {
     public class StaticValue
     {
-        public int AXISYMIN = 15;
+        public int AXISYMIN = 10;
         public int AXISYMAX = 30;
 
-        public int ONVALUE = 20;
-        public int OFFVALUE = 18;
+        public int ONVALUE = 15;
+        public int OFFVALUE = 13;
     }
 }

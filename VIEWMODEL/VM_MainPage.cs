@@ -140,6 +140,7 @@ namespace MONITOR_APP.VIEWMODEL
 
                     if (field == "SET_TEMP")
                     {
+                        //Console.WriteLine($"[{cell.GetTime()}] {cell.GetField()}:{cell.GetValue()}");
                         set = DB_influx.GetData(cell, "SET_TEMP");
                         if (!double.IsNaN(set))
                         {
@@ -149,7 +150,6 @@ namespace MONITOR_APP.VIEWMODEL
                     }
                     else if (field == "CUR_TEMP")
                     {
-                        //Console.WriteLine($"[{cell.GetTime()}] {cell.GetField()}:{cell.GetValue()}");
                         cur = DB_influx.GetData(cell, "CUR_TEMP");
                         if (!double.IsNaN(cur))
                         {
